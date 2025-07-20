@@ -67,17 +67,17 @@ export default function Spider() {
     object4.scale.set(10, 10, 10);
     object4.rotation.y = Math.PI;
 
-    console.log("Spider parts initialized:", {
-      eyes: spiderParts.eyes.length,
-      eyelids: spiderParts.eyelids.length,
-      body: spiderParts.body ? "found" : "not found",
-      joints: spiderParts.joints.length,
-      legs: spiderParts.legs.map((leg) => leg.length),
-      object4: object4 ? "found" : "not found",
-    });
+    // console.log("Spider parts initialized:", {
+    //   eyes: spiderParts.eyes.length,
+    //   eyelids: spiderParts.eyelids.length,
+    //   body: spiderParts.body ? "found" : "not found",
+    //   joints: spiderParts.joints.length,
+    //   legs: spiderParts.legs.map((leg) => leg.length),
+    //   object4: object4 ? "found" : "not found",
+    // });
 
     group.current.add(object4);
-console.log("Available animations:", Object.keys(actions));
+// console.log("Available animations:", Object.keys(actions));
     const idleAnim = actions?.["Idle1"];
 if (idleAnim) {
   // console.log("Playing Idle1 animation", idleAnim);
@@ -93,8 +93,8 @@ if (idleAnim) {
   });
 
   useEyeBlink(eyelidsRef);
-  console.log("useEyeBlink initialized", eyelidsRef.current);
-  console.log("outside use effect", object4Ref.current);
+  // console.log("useEyeBlink initialized", eyelidsRef.current);
+  // console.log("outside use effect", object4Ref.current);
   useAttackAnimation(object4Ref);
 useLegCrawlAnimation(object4Ref, isWalkingRef);
   useWalkAnimation(group, isWalkingRef);

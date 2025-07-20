@@ -36,10 +36,10 @@ export function useWalkAnimation(groupRef, isWalkingRef) {
 
   // Entrance animation trigger
   useEffect(() => {
-    console.log("🕷️ Spider entrance animation started");
+    // console.log("🕷️ Spider entrance animation started");
     if (!groupRef.current) return;
 
-    console.log("🕷️ Spider groupRef is ready for entrance animation");
+    // console.log("🕷️ Spider groupRef is ready for entrance animation");
 
     // Start spider offscreen (top-right corner)
     groupRef.current.position.set(10, 0, 205); // Adjust as needed
@@ -47,38 +47,52 @@ export function useWalkAnimation(groupRef, isWalkingRef) {
     isWalkingRef.current = true;
   }, []);
 
-  // Scroll exit logic
-  useEffect(() => {
-    function onScroll() {
-      const scrollY = window.scrollY;
-      console.log("🕷️ Scroll position:", scrollY);
-      const triggerScrollY = window.innerHeight * 0.7;
-      console.log("🕷️ Trigger scroll position:", triggerScrollY);
+useEffect(() => {
+  const homeEl = document.getElementById("home");
+  const aboutEl = document.getElementById("about");
 
-      if (!hasScrolledRef.current && scrollY > triggerScrollY) {
-        console.log("🕷️ Triggering spider exit animation");
+  let isSpiderOut = false;
 
-        target.current = new THREE.Vector3(-10, 0, 205);
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const homeVisible = entries.find(e => e.target.id === "home")?.isIntersecting ?? false;
+      const aboutVisible = entries.find(e => e.target.id === "about")?.isIntersecting ?? false;
+
+      // Scroll Down: Spider exits only if both not visible
+      console.log(!homeVisible , !aboutVisible,!isSpiderOut);
+      if (((!homeVisible && !aboutVisible) && !isSpiderOut)) {
+        console.log("🕷️ Spider is exiting");
+        target.current = new THREE.Vector3(-10, 0, 205); // Exit position
         isWalkingRef.current = true;
-        hasScrolledRef.current = true;
-      } else if (hasScrolledRef.current && scrollY <= triggerScrollY) {
-        console.log("🕷️ Triggering spider return animation");
-        target.current = new THREE.Vector3(0, 0, 0);
-        isWalkingRef.current = true;
-        hasScrolledRef.current = false;
+        isSpiderOut = true;
       }
-    }
 
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+      // Scroll Up or visible again: Spider comes back if any is visible
+      if (homeVisible||((homeVisible || aboutVisible) && isSpiderOut)) {
+        console.log("🕷️ Spider is coming back");
+        target.current = new THREE.Vector3(0, 0, 0); // Entry position
+        isWalkingRef.current = true;
+        isSpiderOut = false;
+      }
+    },
+    { threshold: 0.9 }
+  );
+
+  if (homeEl) observer.observe(homeEl);
+  if (aboutEl) observer.observe(aboutEl);
+
+  return () => {
+    if (homeEl) observer.unobserve(homeEl);
+    if (aboutEl) observer.unobserve(aboutEl);
+  };
+}, []);
 
   useFrame((_, delta) => {
     const spider = groupRef.current;
     if (!spider || !target.current) return;
 
     const distance = spider.position.distanceTo(target.current);
-    console.log("🕷️ Spider distance to target:", distance);
+    // console.log("🕷️ Spider distance to target:", distance);
 
     if (distance > 12) {
       // Move spider toward target

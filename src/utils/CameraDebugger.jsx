@@ -21,7 +21,7 @@ function CameraDebugger({ controlsRef }) {
       last.current.target?.join() !== target.join();
 
     if (changed) {
-      console.log('Camera position:', position, 'Target:', target);
+      // console.log('Camera position:', position, 'Target:', target);
       last.current = { position, target };
     }
   });

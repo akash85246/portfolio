@@ -12,7 +12,7 @@ export function useAttackAnimation(object4Ref) {
       return;
     }
 
-    console.log("✅ Object_4 found in useAttackAnimation");
+    // console.log("Object_4 found in useAttackAnimation");
 
     const handleGlobalClick = () => {
       const now = Date.now();
