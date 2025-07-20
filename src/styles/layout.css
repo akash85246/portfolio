@@ -6,12 +6,9 @@ body {
   background-color: rgb(24, 24, 24);
   background-attachment: fixed;
   color: white;
+  overflow-x: hidden;
 }
 
-.main-content {
-  padding: 20px;
-  
-}
 
 /* Mobile Responsive */
 @media screen and (max-width: 768px) {

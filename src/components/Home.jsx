@@ -8,13 +8,13 @@ function Home() {
   return (
     <section className="relative !h-[90vh] text-white p-l-16">
       {/* Vertical Side Social Links */}
-      <div className="absolute left-6 top-2/3 transform -translate-y-1/2 flex flex-col !gap-70">
-        <div className="transform -rotate-90 origin-left tracking-widest !text-xl font-bold">
+      <div className="absolute left-12 top-2/3 transform -translate-y-1/2 flex flex-col !gap-70">
+        <a href="https://github.com/akash85246" className="transform -rotate-90 origin-left tracking-widest !text-xl font-bold">
           GITHUB
-        </div>
-        <div className="transform -rotate-90 origin-left tracking-widest !text-xl font-bold">
+        </a>
+        <a href="https://www.linkedin.com/in/akash-rajput-dev/" className="transform -rotate-90 origin-left tracking-widest !text-xl font-bold">
           LINKEDIN
-        </div>
+        </a>
       </div>
 
       {/* Main Content */}
@@ -38,7 +38,7 @@ function Home() {
             </div>
 
             {/* Stats */}
-            <div className="mt-12 grid grid-cols-2 w-full gap-12 text-center orbitron">
+            <div className="mt-6 grid grid-cols-2 pr-20 w-full  text-center orbitron">
               <div>
                 <p className="text-7xl font-bold">12K</p>
                 <p className="text-lg font-semibold">VIEWS</p>
@@ -50,7 +50,7 @@ function Home() {
             </div>
           </div>
           <div
-            className="!w-full !h-full flex items-center justify-center"
+            className="absolute -right-60 top-5 w-[70vw] h-full -z-10"
             id="robot-canvas"
           >
             <SpiderController />
