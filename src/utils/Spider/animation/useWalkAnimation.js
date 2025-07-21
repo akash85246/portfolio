@@ -62,7 +62,7 @@ useEffect(() => {
       console.log(!homeVisible , !aboutVisible,!isSpiderOut);
       if (((!homeVisible && !aboutVisible) && !isSpiderOut)) {
         console.log("🕷️ Spider is exiting");
-        target.current = new THREE.Vector3(-10, 0, 205); // Exit position
+        target.current = new THREE.Vector3(-250, 0, 505); // Exit position
         isWalkingRef.current = true;
         isSpiderOut = true;
       }

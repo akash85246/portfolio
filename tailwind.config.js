@@ -8,9 +8,7 @@ export default {
         michroma: ['Michroma', 'sans-serif'],
       },
       colors: {
-        primary: '#ff6363',
-        secondary: '#3a3a3a',
-        accent: '#f0f0f0',
+        primary: 'rgb(85, 68, 255)',
       },
       fontSize: {
         xxs: "0.625rem",

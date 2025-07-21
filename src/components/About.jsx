@@ -1,5 +1,4 @@
 import React from "react";
-import SpiderController from "./SpiderController";
 import axios from "axios";
 import { useState, useRef } from "react";
 import InstagramStoryCard from "../utils/InstagramStoryCard";
@@ -72,7 +71,7 @@ function About() {
   return (
     <section className="next-section about section" id="about">
       {/* Main Content */}
-      <div className=" flex flex-col justify-around h-full text-center">
+      <div className=" flex flex-col justify-around text-center">
         <div className="flex flex-col items-start justify-center font-orbitron">
           <h1 className="section-heading">ABOUT ME</h1>
           <p className="text-left text-md md:text-xl mt-4 text-gray-300 w-full">
@@ -101,7 +100,7 @@ function About() {
           <div className=""></div>
         </div>
 
-        <div className="relative  w-[56vw] overflow-hidden flex items-center justify-center my-10">
+        <div className="relative  w-[56vw] overflow-hidden flex items-center justify-center mt-10">
           <ul
             className="flex w-full items-start overflow-x-auto gap-[1rem] scrollbar-hide"
             ref={scrollContainerRef}
