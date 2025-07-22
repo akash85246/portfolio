@@ -8,7 +8,7 @@ function Layout({ children }) {
   return (
     <>
       <Navbar />
-      <main className="main-content min-h-screen flex flex-col gap-20">
+      <main className="main-content  flex flex-col gap-5">
         {children}
       </main>
       <Footer />

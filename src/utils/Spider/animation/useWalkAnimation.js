@@ -8,7 +8,7 @@ export function useWalkAnimation(groupRef, isWalkingRef) {
 
   const target = useRef(null);
   const raycaster = new THREE.Raycaster();
-  const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0); // Ground plane (y = 0)
+  const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
   const desiredLookQuat = useRef(new THREE.Quaternion());
 
   useEffect(() => {
@@ -62,7 +62,7 @@ useEffect(() => {
       console.log(!homeVisible , !aboutVisible,!isSpiderOut);
       if (((!homeVisible && !aboutVisible) && !isSpiderOut)) {
         console.log("🕷️ Spider is exiting");
-        target.current = new THREE.Vector3(-250, 0, 505); // Exit position
+        target.current = new THREE.Vector3(-350, 0, 605); // Exit position
         isWalkingRef.current = true;
         isSpiderOut = true;
       }
@@ -96,7 +96,7 @@ useEffect(() => {
 
     if (distance > 12) {
       // Move spider toward target
-      spider.position.lerp(target.current, delta * 0.8);
+      spider.position.lerp(target.current, delta * 1);
 
       // Calculate direction and target rotation
       const direction = target.current.clone().sub(spider.position).normalize();

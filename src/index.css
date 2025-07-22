@@ -21,3 +21,39 @@ body {
 .border-highlight {
   border: 1px solid rgba(85, 68, 255);
 }
+
+@keyframes fadeUpBackground {
+  0% {
+    background: linear-gradient(to top, transparent, transparent);
+  }
+  100% {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+  }
+}
+
+.hover-fade-up:hover {
+  animation: fadeUpBackground 0.1s forwards;
+}
+
+
+
+
+.skill-card-ltr {
+  position: relative;
+  overflow: hidden;
+  z-index: 0; /* ensure it's not overlapping others */
+}
+
+.skill-card-ltr::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+  z-index: -1; /* put it behind content */
+}
+
+.skill-card-ltr:hover::before {
+  transform: translateX(0);
+}
