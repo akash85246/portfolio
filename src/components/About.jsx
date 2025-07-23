@@ -72,7 +72,7 @@ function About() {
     <section className="next-section about section" id="about">
       {/* Main Content */}
       <div className=" flex flex-col justify-around text-center">
-        <div className="flex flex-col items-start justify-center font-orbitron">
+        <div className="flex flex-col items-start justify-center ">
           <h1 className="section-heading">ABOUT ME</h1>
           <p className="text-left text-md md:text-xl mt-4 text-gray-300 w-full">
             I’m a final-year B.Tech student specializing in Artificial

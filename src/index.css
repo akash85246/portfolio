@@ -41,7 +41,7 @@ body {
 .skill-card-ltr {
   position: relative;
   overflow: hidden;
-  z-index: 0; /* ensure it's not overlapping others */
+  z-index: 0; 
 }
 
 .skill-card-ltr::before {
@@ -56,4 +56,54 @@ body {
 
 .skill-card-ltr:hover::before {
   transform: translateX(0);
+}
+
+
+.color-empty {
+  fill: #1f2937 !important; 
+  rx: 2;
+  ry: 2;
+}
+
+.color-scale-1 {
+  fill: #064e3b; 
+  rx: 2;
+  ry: 2;
+}
+
+.color-scale-2 {
+  fill: #047857; 
+  rx: 2;
+  ry: 2;
+}
+
+.color-scale-3 {
+  fill: #10b981; 
+  rx: 2;
+  ry: 2;
+}
+
+.color-scale-4 {
+  fill: #6ee7b7; 
+  rx: 2;
+  ry: 2;
+}
+
+
+.react-calendar-heatmap .react-calendar-heatmap-day {
+  rx: 2;
+  ry: 2;
+  shape-rendering: geometricPrecision;
+}
+
+.react-calendar-heatmap text {
+  display: none;
+}
+.react-calendar-heatmap .text {
+  display: none;
+}
+
+.react-calendar-heatmap-all-weeks{
+  width: 100% !important;
+  translate: 0 !important;
 }

@@ -145,7 +145,7 @@ export default function SkillCard({ icon, name, color = "#cccccc", type }) {
 
   return (
     <div
-      className=" rounded-xl p-2 shadow-md bg-white dark:bg-gray-800 flex flex-col items-center justify-center hover:shadow-lg transition border  hover-fade-up"
+      className=" rounded-xl p-2 shadow-md  bg-transparent flex flex-col items-center justify-center hover:shadow-lg transition border  hover-fade-up"
       style={{ borderColor: color }}
     >
       <div className="w-35 h-35 mb-2 overflow-hidden">{content}</div>

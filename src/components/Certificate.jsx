@@ -1,11 +1,136 @@
+import React, { useRef, useState, useEffect } from "react";
+import sql from "../assets/Certificates/SQLcertificate.png";
+import fullstack from "../assets/Certificates/fullstack.png";
+import vihaan from "../assets/Certificates/vihaan.png";
+import pbel from "../assets/Certificates/PBEL.png";
+import gdsc from "../assets/Certificates/gdsc.png";
+import ibm from "../assets/Certificates/IBM.png";
+// more
+import aiImage from "../assets/Certificates/infosys/ai.png";
+import cvImage from "../assets/Certificates/infosys/ComputerVision101.png";
+import dataScienceImage from "../assets/Certificates/infosys/dataScience.png";
+import dlImage from "../assets/Certificates/infosys/dl.png";
+import dlForDevImage from "../assets/Certificates/infosys/dlForDevelopers.png";
+import emailWritingImage from "../assets/Certificates/infosys/emailWriting.png";
+import mlFundamentalsImage from "../assets/Certificates/infosys/fundamentalsOfMachineLearning.png";
+import generativeAIImage from "../assets/Certificates/infosys/generativeAI.png";
+import generativeModelsImage from "../assets/Certificates/infosys/generativeModels.png";
+import hipImage from "../assets/Certificates/infosys/hip.png";
+import ibmImage from "../assets/Certificates/infosys/IBM.png";
+import nlpImage from "../assets/Certificates/infosys/nlp.png";
+import gptImage from "../assets/Certificates/infosys/OpenAIGpt.png";
+import transformerImage from "../assets/Certificates/infosys/preTrainedTransformer.png";
+import primerImage from "../assets/Certificates/infosys/primer.png";
+import promptEngineeringImage from "../assets/Certificates/infosys/promptEngineering.png";
+import rpaImage from "../assets/Certificates/infosys/RoboticProcessAutomation.png";
+import runtymImage from "../assets/Certificates/infosys/RuntymSI.png";
+import timeManagementImage from "../assets/Certificates/infosys/timeManagement.png";
+
 function Certificate() {
+   
+  const [selectedId, setSelectedId] = useState(11);
+  const scrollRef = useRef(null);
+  const itemRefs = useRef([]);
+
+  const certificates = [
+    { id: 1, src: aiImage, title: "AI Certificate" },
+    { id: 2, src: cvImage, title: "Computer Vision 101" },
+    { id: 3, src: dataScienceImage, title: "Data Science" },
+    { id: 4, src: dlImage, title: "Deep Learning" },
+    { id: 5, src: dlForDevImage, title: "Deep Learning for Developers" },
+    { id: 6, src: emailWritingImage, title: "Email Writing" },
+    { id: 7, src: mlFundamentalsImage, title: "Machine Learning Fundamentals" },
+    { id: 8, src: generativeAIImage, title: "Generative AI" },
+    { id: 9, src: generativeModelsImage, title: "Generative Models" },
+    { id: 10, src: hipImage, title: "HIP Certificate" },
+    { id: 11, src: ibmImage, title: "IBM Certificate" },
+    { id: 12, src: nlpImage, title: "NLP Certificate" },
+    { id: 13, src: gptImage, title: "OpenAI GPT Certificate" },
+    {
+      id: 14,
+      src: transformerImage,
+      title: "Pre-trained Transformer Certificate",
+    },
+    { id: 15, src: primerImage, title: "Primer Certificate" },
+    {
+      id: 16,
+      src: promptEngineeringImage,
+      title: "Prompt Engineering Certificate",
+    },
+    { id: 17, src: rpaImage, title: "Robotic Process Automation Certificate" },
+    { id: 18, src: runtymImage, title: "Runtym SI Certificate" },
+    { id: 19, src: timeManagementImage, title: "Time Management Certificate" },
+  ];
+
+   
+   
+
+
+
+
   return (
-    <section className="next-section certificate" id="certificate">
-      <h1>Welcome to My Portfolio</h1>
-      <p>
-        This is the Certificate page where you can find my latest projects and
-        skills.
-      </p>
+    <section className="next-section certificate p-5" id="certificate">
+      <div>
+        <h1 className="section-heading text-left">CERTIFICATES</h1>
+      </div>
+
+      <div className="flex flex-col gap-5">
+        <div className="gap-5 grid grid-cols-3">
+          <img src={fullstack} className=" aspect-[3/2] col-span-2 " />
+          <div className="gap-5 grid grid-cols-1">
+            <img src={sql} className=" aspect-[3/2] w-full "></img>
+            <img src={ibm} className=" aspect-[3/2] w-full "></img>
+          </div>
+        </div>
+        <div className="gap-5 grid grid-cols-3">
+          <div className="gap-5 grid grid-cols-1 ">
+            <img src={vihaan} className=" aspect-[3/2] w-full "></img>
+            <img src={gdsc} className=" aspect-[3/2] w-full "></img>
+          </div>
+          <img src={pbel} className=" aspect-[3/2] col-span-2 " />
+        </div>
+      </div>
+
+      <div>
+        <h1 className="!text-2xl section-heading text-left p-2 pt-10">
+          MORE CERTIFICATES
+        </h1>
+
+      <div className="flex justify-evenly items-start gap-5">
+        {/* Selected certificate display */}
+  
+          <img
+            src={certificates[selectedId - 1]?.src}
+            alt="Selected Certificate"
+            className="max-h-[45rem] aspect-[3/2]  object-cover  border rounded-lg shadow-lg"
+          />
+
+
+        {/* Vertical carousel */}
+        <div
+          className="max-h-[45rem] w-64 overflow-y-scroll scroll-smooth snap-y snap-mandatory border rounded-lg"
+          ref={scrollRef}
+          
+        >
+          {certificates.map((cert, idx) => (
+            <div
+              key={cert.id}
+              className={`snap-center cursor-pointer transition-all duration-300 flex items-center justify-center m-2 ${
+                selectedId === cert.id ? "scale-110" : "scale-100 opacity-60"
+              }`}
+              onClick={() => setSelectedId(cert.id)}
+              ref={(el) => (itemRefs.current[idx] = el)}
+            >
+              <img
+                src={cert.src}
+                alt={cert.title}
+                className="w-60 h-48 object-cover"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+      </div>
     </section>
   );
 }

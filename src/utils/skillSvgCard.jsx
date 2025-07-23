@@ -2,7 +2,7 @@ function SkillSvgCard({ icon, name, color = "#cccccc" }) {
    
   return (
   <div
-    className="skill-card-ltr py-2 px-5 rounded-xl shadow-md bg-white dark:bg-gray-800 flex items-center justify-center hover:shadow-xl transition border-4 hover:scale-110 gap-5"
+    className="skill-card-ltr py-2 px-5 rounded-xl shadow-md bg-transparent  backdrop-opacity-100 flex items-center justify-center hover:shadow-xl transition border-4 hover:scale-110 gap-5"
     style={{ borderColor: color }}
   >
     <div className="rounded-full flex items-center justify-center overflow-hidden svg-3d-wrapper z-10">

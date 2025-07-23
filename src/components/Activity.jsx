@@ -1,10 +1,17 @@
+import GithubActivity from '../utils/GithubActivity';
+import LeetCodeActivity from '../utils/LeetCodeActivity';
 function Activity() {
   return (
-    <div className="activity-container">
-      <h2>Activity</h2>
-      <p>Here you can display your recent activities or contributions.</p>
-      {/* Add your activity content here */}
-    </div>
+    <section className="next-section activity p-5" id="activity">
+      <div>
+        <h1 className="section-heading text-left">GITHUB</h1>
+      </div>
+      <GithubActivity />
+      <div>
+        <h1 className="section-heading text-left">LEETCODE</h1>
+      </div>
+      <LeetCodeActivity />
+    </section>
   );
 }
 export default Activity;
