@@ -17,6 +17,8 @@ const Chat = () => {
   const [isOnline, setIsOnline] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [users, setUsers] = useState([]);
+  const [unreadCounts, setUnreadCounts] = useState({});
+  const [isUploading, setIsUploading] = useState(false);
 
   const bottomRef = useRef();
 
@@ -35,15 +37,25 @@ const Chat = () => {
 
       socket.on("connect", () => {
         console.log("Connected with socket ID:", socket.id);
-        socket.emit("user_connected", userId,receiver_id);
+        socket.emit("user_connected", userId, receiver_id);
       });
     } else {
       socket.emit("user_connected", userId);
     }
 
     const handleReceiveMessage = (msg) => {
-      console.log("Received message:", msg);
-      setMessages((prev) => [...prev, msg]);
+      console.log("Received message", msg);
+      if (isAdmin && (msg.user_id !== receiver_id)) {
+        // Message is for another user — increase their unread count
+        setUnreadCounts((prev) => ({
+          ...prev,
+          [msg.user_id]: (prev[msg.user_id] || 0) + 1,
+        }));
+      } else {
+       
+        console.log("Received message for current user:", msg);
+        setMessages((prev) => [...prev, msg]);
+      }
     };
 
     const handleMessageSent = (msg) => {
@@ -66,7 +78,6 @@ const Chat = () => {
       setIsOnline(userList.includes(adminId));
 
       if (isAdmin) {
-        console.log("Admin connected, fetching all users");
 
         socket.emit("get_all_users", (usersOrError) => {
           if (usersOrError?.error) {
@@ -77,7 +88,6 @@ const Chat = () => {
 
           setUsers(usersOrError); // Set state with fetched users
 
-          console.log("All users:", usersOrError);
         });
       }
     });
@@ -101,16 +111,14 @@ const Chat = () => {
   useEffect(() => {
     if (!receiver_id || !userId) return;
 
-    console.log("Fetching messages for:", userId, "and", receiver_id);
+  
 
     socket.emit("load_messages", {
       user_id: userId,
       receiver_id: receiver_id,
     });
-    
 
     const handleLoadMessages = (messages) => {
-      console.log("Received messages:",receiver_id,userId ,messages);
       setMessages(messages);
     };
 
@@ -136,7 +144,7 @@ const Chat = () => {
       receiver_id: receiver_id,
       user_id: userId,
       content: contentToSend,
-      fileUrl: file || null,
+      file_url: file || null,
       profile_photo: user.profile_picture,
       created_at: new Date().toISOString(),
     };
@@ -144,18 +152,14 @@ const Chat = () => {
     // Optimistically update UI
     setMessages((prev) => [...prev, msg]);
 
-    console.log("Sending message:", msg);
-    console.log("File to send:", file);
-    console.log("Content to send:", contentToSend);
-    console.log("Receiver ID:", receiver_id);
-    console.log("User ID:", userId);
+  
 
     // Emit to backend
     socket.emit("send_message", {
       receiver_id: receiver_id,
       user_id: userId,
       content: contentToSend,
-      fileUrl: file || null,
+      file_url: file || null,
       ipAddress: "N/A",
     });
 
@@ -163,16 +167,33 @@ const Chat = () => {
     setFile(null);
   };
 
-  const handleFileUpload = (e) => {
-    const selected = e.target.files[0];
-    if (selected) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setFile(reader.result); // base64 string
-      };
-      reader.readAsDataURL(selected);
+const handleFileUpload = async (file) => {
+  if (!file) return;
+  setIsUploading(true);
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+  formData.append("folder", import.meta.env.VITE_CLOUDINARY_UPLOAD_FOLDER);
+
+  try {
+    const res = await fetch(import.meta.env.VITE_CLOUDINARY_UPLOAD_URL, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+    if (data.secure_url) {
+      setFile(data.secure_url);
+    } else {
+      console.error("Cloudinary returned an error:", data);
     }
-  };
+  } catch (err) {
+    console.error("File upload error:", err);
+  }
+
+  setIsUploading(false);
+};
 
   // Handle logout
   const dispatch = useDispatch();
@@ -191,23 +212,37 @@ const Chat = () => {
           {users.map((user) => (
             <div
               key={user.id}
-              className="flex items-center gap-2 p-2 hover:bg-gray-700 my-1 rounded cursor-pointer overflow-hidden"
+              className="flex items-center gap-2 p-2 hover:bg-gray-700 my-1 rounded cursor-pointer overflow-hidden "
               onClick={() => {
                 const newReceiverId = user.id === userId ? adminId : user.id;
                 setreceiver_id(newReceiverId);
                 if (receiver_id !== newReceiverId) {
                   setreceiver_id(newReceiverId);
                 }
+                console.log(newReceiverId, receiver_id, userId);
+                setUnreadCounts((prev) => ({
+                  ...prev,
+                  [user.id]: 0,
+                }));
               }}
             >
               <div className="relative">
                 <img
                   src={user.profile_picture || "/default-avatar.png"}
                   alt="avatar"
-                  className="w-8 h-8 rounded-full object-cover"
+                  className="w-12 h-8 rounded-full object-cover"
                 />
                 {user.is_online && (
                   <span className="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full border border-white" />
+                )}
+
+                {unreadCounts[user.id] > 0 && (
+                  <span
+                    id={`new-message-${user.id}`}
+                    className="absolute -top-1 -right-1 text-[10px] bg-red-500 text-white px-1 rounded-full"
+                  >
+                    +{unreadCounts[user.id]}
+                  </span>
                 )}
               </div>
 
@@ -241,7 +276,7 @@ const Chat = () => {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 h-[50vh] min-h-[70vh]">
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 h-[50vh] min-h-[50vh] max-h-[60vh]">
           {messages.map((msg) => (
             <div
               key={msg.id}
@@ -261,17 +296,23 @@ const Chat = () => {
                   className={`rounded-lg px-4 py-2 max-w-[35rem] text-sm relative break-words ${
                     msg.user_id === userId
                       ? "bg-blue-600 text-white"
-                      : "bg-black/10 text-black"
+                      : "bg-black/10 text-white"
                   }`}
                 >
                   {msg.file_url ? (
-                    <a
-                      href={msg.file_url}
-                      download
-                      className="text-blue-300 underline"
-                    >
-                      File
-                    </a>
+                    <>
+                      <a
+                        href={msg.file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-300 underline"
+                      >
+                        Photo
+                      </a>
+                      <span className="block text-gray-400 text-xs mt-1">
+                        {msg.content}
+                      </span>
+                    </>
                   ) : (
                     msg.content
                   )}
@@ -297,29 +338,60 @@ const Chat = () => {
         </div>
 
         {/* Input */}
-        <div className="border-t border-gray-700 p-3 flex items-center gap-3">
-          <input
-            type="file"
-            id="fileInput"
-            onChange={handleFileUpload}
-            className="hidden"
-          />
-          <label htmlFor="fileInput" className="cursor-pointer text-gray-400">
-            <AttachFile />
-          </label>
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="flex-1 bg-black/10 text-white py-2 px-4 rounded-full outline-none"
-            placeholder="Type a message..."
-          />
-          <button
-            onClick={sendMessage}
-            className="bg-black/20 p-2 aspect-[1/1] rounded-full hover:bg-black/30"
-          >
-            <Send className="text-white" />
-          </button>
+        <div>
+          {!isUploading && file && (
+            <div className="bg-green-100 text-green-800 p-2 rounded-lg mb-3 text-sm break-all">
+              📎 File uploaded:{" "}
+              <a
+                href={file}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-green-900"
+              >
+                {file}
+              </a>
+            </div>
+          )}
+
+          <div className="border-t border-gray-700 p-3 flex items-center gap-3">
+            {!isUploading && (
+              <>
+                <input
+                  type="file"
+                  id="fileInput"
+                  accept=".jpg, .png, .gif, .webp"
+                  onChange={(e) => handleFileUpload(e.target.files[0])}
+                  className="hidden"
+                />
+                <label
+                  htmlFor="fileInput"
+                  className="cursor-pointer text-gray-400"
+                >
+                  <AttachFile />
+                </label>
+              </>
+            )}
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              className="flex-1 bg-black/10 text-white py-2 px-4 rounded-full outline-none"
+              placeholder="Type a message..."
+            />
+            <button
+              onClick={sendMessage}
+              disabled={isUploading}
+              className={`p-2 aspect-[1/1] rounded-full transition 
+    ${
+      isUploading
+        ? "bg-gray-500 cursor-not-allowed"
+        : "bg-black/20 hover:bg-black/30"
+    }
+  `}
+            >
+              <Send className="text-white" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -8,7 +8,6 @@ import GoogleIcon from "@mui/icons-material/Google";
 import axios from "axios";
 import socket from "../socket.js";
 
-
 function Contact() {
   const auth = useSelector((state) => state.auth);
   const user = useSelector((state) => state.user);
@@ -17,7 +16,6 @@ function Contact() {
   const isAuthenticated = auth.isAuthenticated;
   const jwt = auth.jwt;
   const dispatch = useDispatch();
-
 
   const handleGoogleLogin = async () => {
     window.open(
@@ -54,56 +52,53 @@ function Contact() {
   }, [dispatch]);
 
   //get user info
-useEffect(() => {
-  if (isAuthenticated) {
-    axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/user`, {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
-      .then((res) => {
-      
-        if (res.status === 200) {
-          const userObj = res.data.user[0]; 
-         
-          dispatch(setUser(userObj));
-        } else {
-          console.error("Failed to fetch user data:", res);
-        }
-      })
-      .catch((err) => {
-        if (err.response && err.response.status === 403) {
-          dispatch(logout());
-          dispatch(clearUser());
-        }
-        console.error("Error fetching user:", err);
-      });
-  }
-}, [isAuthenticated, jwt, dispatch]);
+  useEffect(() => {
+    if (isAuthenticated) {
+      axios
+        .get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/user`, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            const userObj = res.data.user[0];
 
-useEffect(() => {
+            dispatch(setUser(userObj));
+          } else {
+            console.error("Failed to fetch user data:", res);
+          }
+        })
+        .catch((err) => {
+          if (err.response && err.response.status === 403) {
+            dispatch(logout());
+            dispatch(clearUser());
+          }
+          console.error("Error fetching user:", err);
+        });
+    }
+  }, [isAuthenticated, jwt, dispatch]);
+
+  useEffect(() => {
     if (isAuthenticated && user.id) {
-      socket.connect(); 
+      socket.connect();
       socket.emit("user_connected", user.id);
     }
 
     return () => {
       socket.disconnect();
     };
-  }, [user,isAuthenticated]);
+  }, [user, isAuthenticated]);
 
   return (
     <section className="next-section contact p-5" id="contact">
       <h1 className="section-heading">GET IN TOUCH</h1>
       <div className="grid grid-cols-3 items-center justify-center mt-8 gap-6">
-
-        {isAuthenticated ? (<>
-       
-          <Chat />
+        {isAuthenticated ? (
+          <>
+            <Chat />
           </>
-
         ) : (
           <div className="bg-white/5 col-span-2 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-white/10 flex flex-col flex-1 items-center justify-center gap-10 relative min-h-[60vh] transition-all duration-300 hover:shadow-2xl hover:scale-[1.01]">
             <div className="flex flex-col items-center text-center gap-5">
