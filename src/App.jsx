@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+
 import Home from "./components/Home";
 import About from "./components/About";
 import Project from "./components/Project";
@@ -8,6 +8,7 @@ import Activity from "./components/Activity";
 import Contact from "./components/Contact";
 import Layout from "./layouts/layout";
 import SpiderController from "./components/SpiderController";
+
 
 function App() {
   return (

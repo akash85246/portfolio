@@ -4,7 +4,6 @@ import * as THREE from "three";
 
 export function useWalkAnimation(groupRef, isWalkingRef) {
   const { camera, gl } = useThree();
-  let hasScrolledRef = useRef(false);
 
   const target = useRef(null);
   const raycaster = new THREE.Raycaster();
@@ -50,6 +49,7 @@ export function useWalkAnimation(groupRef, isWalkingRef) {
 useEffect(() => {
   const homeEl = document.getElementById("home");
   const aboutEl = document.getElementById("about");
+  const contactEl = document.getElementById("contact");
 
   let isSpiderOut = false;
 
@@ -57,10 +57,12 @@ useEffect(() => {
     (entries) => {
       const homeVisible = entries.find(e => e.target.id === "home")?.isIntersecting ?? false;
       const aboutVisible = entries.find(e => e.target.id === "about")?.isIntersecting ?? false;
+      const contactVisible = entries.find(e => e.target.id === "contact")?.isIntersecting ?? false;
 
       // Scroll Down: Spider exits only if both not visible
       console.log(!homeVisible , !aboutVisible,!isSpiderOut);
-      if (((!homeVisible && !aboutVisible) && !isSpiderOut)) {
+      console.log("🕷️ Spider visibility check:", ((!homeVisible && !aboutVisible && !contactVisible) && !isSpiderOut));
+      if (((!homeVisible && !aboutVisible && !contactVisible) && !isSpiderOut)) {
         console.log("🕷️ Spider is exiting");
         target.current = new THREE.Vector3(-350, 0, 605); // Exit position
         isWalkingRef.current = true;
@@ -68,22 +70,26 @@ useEffect(() => {
       }
 
       // Scroll Up or visible again: Spider comes back if any is visible
-      if (homeVisible||((homeVisible || aboutVisible) && isSpiderOut)) {
+      console.log(homeVisible, aboutVisible, contactVisible, isSpiderOut);
+      console.log(((homeVisible || aboutVisible ||contactVisible ) && isSpiderOut));
+      if (((homeVisible || aboutVisible ||contactVisible ) && isSpiderOut)) {
         console.log("🕷️ Spider is coming back");
         target.current = new THREE.Vector3(0, 0, 0); // Entry position
         isWalkingRef.current = true;
         isSpiderOut = false;
       }
     },
-    { threshold: 0.9 }
+    { threshold: 0.7 }
   );
 
   if (homeEl) observer.observe(homeEl);
   if (aboutEl) observer.observe(aboutEl);
+  if (contactEl) observer.observe(contactEl);
 
   return () => {
     if (homeEl) observer.unobserve(homeEl);
     if (aboutEl) observer.unobserve(aboutEl);
+    if (contactEl) observer.unobserve(contactEl);
   };
 }, []);
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CalendarHeatmap from "react-calendar-heatmap";
-import { addDays } from "date-fns";
 import { Tooltip } from "react-tooltip";
 import "react-calendar-heatmap/dist/styles.css";
 import "react-tooltip/dist/react-tooltip.css";
@@ -58,7 +57,6 @@ function LeetCodeActivity() {
   );
 
   const getIcon = (difficulty) => {
-    console.log("Difficulty:", difficulty);
     switch (difficulty) {
       case "Easy":
         return <Sparkles className="text-green-400 w-6 h-6" />;
