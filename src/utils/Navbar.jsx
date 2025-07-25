@@ -19,12 +19,12 @@ function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-black/30 backdrop-blur-sm border-b border-b-gray-300 text-white p-4">
       <div className="container mx-auto flex justify-between items-center">
-       
         <div className="flex items-center space-x-6">
-         
           <a href="#home" className="flex items-center space-x-2">
             <img src="/redLogo.svg" alt="Logo" className="w-6 h-6" />
-            <span className="text-base font-bold">Akash Rajput</span>
+            <span className="text-base font-bold whitespace-nowrap">
+              Akash Rajput
+            </span>
           </a>
 
           {/* Desktop Nav */}
@@ -39,9 +39,7 @@ function Navbar() {
           </ul>
         </div>
 
-       
         <div className="flex items-center space-x-4">
-         
           <a
             href="/resume.pdf"
             download
@@ -53,7 +51,10 @@ function Navbar() {
 
           {/* Burger Menu - Mobile Only */}
           <div className="lg:hidden">
-            <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle Menu">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle Menu"
+            >
               {menuOpen ? <CloseIcon /> : <MenuIcon />}
             </button>
           </div>
@@ -62,13 +63,13 @@ function Navbar() {
 
       {/* Mobile Dropdown Nav - Excludes Resume */}
       {menuOpen && (
-        <div className="lg:hidden mt-4 px-4 space-y-4 !text-xs !lg:text-sm uppercase font-light">
+        <div className="lg:hidden absolute top-full left-0 w-full bg-black/90  space-y-4 !text-xs !lg:text-sm uppercase font-light z-40">
           {navItems.map((item) => (
             <a
               key={item}
               href={`#${item.toLowerCase()}`}
               onClick={() => setMenuOpen(false)}
-              className="block border-b border-gray-600 pb-2"
+              className="block border-b border-gray-600  px-4 py-4 text-center hover:bg-gray-700 transition"
             >
               {item}
             </a>

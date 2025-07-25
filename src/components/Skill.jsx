@@ -63,12 +63,12 @@ function Skill() {
 
 
   return (
-    <section className="next-section skill p-5 " id="skill">
+    <section className="next-section skill section " id="skill">
       <div>
         <h1 className="section-heading text-left">SKILL</h1>
       </div>
 
-      <div className="skill-container flex flex-wrap items-center justify-evenly gap-5">
+      <div className="skill-container flex flex-wrap items-center justify-evenly gap-2 md:gap-5">
         {skillLogos.map((logo, index) => {
           if(logo.type !== 'svg')
           return (
@@ -82,8 +82,8 @@ function Skill() {
           />
         )})}
       </div>
-       <h2 className="pt-10 !text-2xl section-heading text-left ">MORE SKILL</h2>
-      <div className="skill-container flex flex-wrap items-center justify-evenly gap-5">
+       <h2 className="pt-5 md:pt-10 text-xl sm:text-2xl md:text-3xl text-[#00bcd4] mb-2 orbitron text-left ">MORE SKILL</h2>
+      <div className="skill-container flex flex-wrap items-center justify-evenly gap-2 lg:gap-5">
        {skillLogos.map((logo, index) => {
           if(logo.type === 'svg')
           return (

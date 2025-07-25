@@ -28,7 +28,7 @@ import timeManagementImage from "../assets/Certificates/infosys/timeManagement.p
 
 function Certificate() {
    
-  const [selectedId, setSelectedId] = useState(11);
+  const [selectedId, setSelectedId] = useState(18);
   const scrollRef = useRef(null);
   const itemRefs = useRef([]);
 
@@ -43,7 +43,7 @@ function Certificate() {
     { id: 8, src: generativeAIImage, title: "Generative AI" },
     { id: 9, src: generativeModelsImage, title: "Generative Models" },
     { id: 10, src: hipImage, title: "HIP Certificate" },
-    { id: 11, src: ibmImage, title: "IBM Certificate" },
+    { id: 11, src: timeManagementImage, title: "Time Management Certificate" },
     { id: 12, src: nlpImage, title: "NLP Certificate" },
     { id: 13, src: gptImage, title: "OpenAI GPT Certificate" },
     {
@@ -59,7 +59,7 @@ function Certificate() {
     },
     { id: 17, src: rpaImage, title: "Robotic Process Automation Certificate" },
     { id: 18, src: runtymImage, title: "Runtym SI Certificate" },
-    { id: 19, src: timeManagementImage, title: "Time Management Certificate" },
+
   ];
 
    
@@ -69,46 +69,46 @@ function Certificate() {
 
 
   return (
-    <section className="next-section certificate p-5" id="certificate">
+    <section className="next-section certificate section" id="certificate">
       <div>
         <h1 className="section-heading text-left">CERTIFICATES</h1>
       </div>
 
-      <div className="flex flex-col gap-5">
-        <div className="gap-5 grid grid-cols-3">
-          <img src={fullstack} className=" aspect-[3/2] col-span-2 " />
-          <div className="gap-5 grid grid-cols-1">
+      <div className="flex flex-col gap-1 sm:gap-2 md:gap-5">
+        <div className="gap-1 sm:gap-2 md:gap-5 grid-cols-5 grid md:grid-cols-3">
+          <img src={fullstack} className=" md:aspect-[3/2] col-span-3 md:col-span-2 h-full object-centre" />
+          <div className="gap-1 sm:gap-2 md:gap-5 grid grid-cols-1 col-span-2 md:col-span-1 ">
             <img src={sql} className=" aspect-[3/2] w-full "></img>
             <img src={ibm} className=" aspect-[3/2] w-full "></img>
           </div>
         </div>
-        <div className="gap-5 grid grid-cols-3">
-          <div className="gap-5 grid grid-cols-1 ">
+        <div className="gap-1 sm:gap-2 md:gap-5 grid-cols-5 grid md:grid-cols-3">
+          <div className="gap-1 sm:gap-2 md:gap-5 grid grid-cols-1 col-span-2 md:col-span-1 ">
             <img src={vihaan} className=" aspect-[3/2] w-full "></img>
             <img src={gdsc} className=" aspect-[3/2] w-full "></img>
           </div>
-          <img src={pbel} className=" aspect-[3/2] col-span-2 " />
+          <img src={pbel} className=" md:aspect-[3/2] col-span-3 md:col-span-2 h-full object-centre"/>
         </div>
       </div>
 
       <div>
-        <h1 className="!text-2xl section-heading text-left p-2 pt-10">
+        <h1 className="pt-5 md:pt-10 text-xl sm:text-2xl md:text-3xl text-[#00bcd4] mb-2 orbitron text-left ">
           MORE CERTIFICATES
         </h1>
 
-      <div className="flex justify-evenly items-start gap-5">
+      <div className="flex justify-evenly items-start gap-1 sm:gap-2 lg:gap-5">
         {/* Selected certificate display */}
   
           <img
             src={certificates[selectedId - 1]?.src}
             alt="Selected Certificate"
-            className="max-h-[45rem] aspect-[3/2]  object-cover  border rounded-lg shadow-lg"
+            className="max-h-[10rem] sm:max-h-[20rem] md:max-h-[24rem] lg:max-h-[35rem] xl:max-h-[45rem]  aspect-[3/2]  object-cover  border rounded-lg shadow-lg"
           />
 
 
         {/* Vertical carousel */}
         <div
-          className="max-h-[45rem] w-64 overflow-y-scroll scroll-smooth snap-y snap-mandatory border rounded-lg"
+          className="max-h-[10rem] sm:max-h-[20rem] md:max-h-[24rem] lg:max-h-[35rem] xl:max-h-[45rem] w-64 overflow-y-scroll scroll-smooth snap-y snap-mandatory border rounded-lg"
           ref={scrollRef}
           
         >
@@ -124,7 +124,7 @@ function Certificate() {
               <img
                 src={cert.src}
                 alt={cert.title}
-                className="w-60 h-48 object-cover"
+                className="w-40  aspect-auto md:w-50 md:h-38 lg:w-60 lg:h-48 object-cover"
               />
             </div>
           ))}

@@ -69,12 +69,12 @@ function About() {
 
 
   return (
-    <section className="next-section about section" id="about">
+    <section className=" md:p-5 next-section about section" id="about">
       {/* Main Content */}
-      <div className=" flex flex-col justify-around text-center">
+      <div className=" flex flex-col justify-around text-center]">
         <div className="flex flex-col items-start justify-center ">
           <h1 className="section-heading">ABOUT ME</h1>
-          <p className="text-left text-md md:text-xl mt-4 text-gray-300 w-full">
+          <p className="text-left text-xs sm:text-sm md:text-base lg:text-xl mt-2 md:mt-4 text-gray-300 w-full">
             I’m a final-year B.Tech student specializing in Artificial
             Intelligence and Machine Learning, with a strong passion for
             full-stack web development and building futuristic user experiences.
@@ -85,8 +85,8 @@ function About() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 ">
-          <p className="text-left text-md md:text-xl mt-4 text-gray-300 w-full">
+        <div className="grid grid-cols-4 lg:grid-cols-2 ">
+          <p className="col-span-4 sm:col-span-4 lg:col-span-1 text-left text-xs sm:text-sm md:text-base lg:text-xl mt-2 md:mt-4 text-gray-300 w-full">
             Driven by curiosity and creativity, I approach challenges with a
             solution-focused mindset and a deep interest in how technology can
             solve real problems. I’ve worked on projects like an AI-powered blog

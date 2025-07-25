@@ -8,15 +8,17 @@ import { Sparkles, Zap, Flame, Circle } from "lucide-react";
 
 function StatCard({ icon, title, value }) {
   return (
-    <div className="bg-white/5 backdrop-blur-md p-4 rounded-xl shadow-md border border-white/10 flex items-center gap-4 relative min-h-[100px]">
-      <div className="w-12 h-12 flex items-center justify-center text-white">
+    <div className="backdrop-blur-sm p-2 md:p-5 lg:p-6 rounded-xl shadow-md border border-white/10 flex items-center justify-center gap-1 sm:gap-3 md:gap-4 relative min-h-[80px] md:min-h-[100px] w-full max-w-sm ">
+      <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center mt-5 text-white text-xl md:text-2xl">
         {icon}
       </div>
       <div className="w-full text-center">
-        <h3 className="text-white font-semibold text-sm absolute top-2 left-2">
+        <h3 className="text-white font-semibold text-[0.6rem] md:text-sm absolute top-2 left-2">
           {title}
         </h3>
-        <p className="text-gray-300 text-xl font-semibold mt-4">{value}</p>
+        <p className="text-gray-300 text-xs sm:text-lg md:text-xl font-semibold mt-4">
+          {value}
+        </p>
       </div>
     </div>
   );
@@ -98,7 +100,7 @@ function LeetCodeActivity() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 my-2 md:my-6">
         {stats.map((d) => (
           <StatCard
             key={d.difficulty}

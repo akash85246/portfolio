@@ -1,5 +1,5 @@
 import ProjectCard from "../utils/ProjectCard";
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import skill1 from "../assets/ProjectImages/Project1/page1.png";
 import shelf1 from "../assets/ProjectImages/Project2/page1.png";
@@ -125,7 +125,7 @@ const Project = () => {
   ];
 
   return (
-    <section className="next-section project p-5" id="project">
+    <section className="next-section  project section" id="project">
       <div>
         <h1 className="section-heading text-left">PROJECT</h1>
       </div>
@@ -144,15 +144,16 @@ const Project = () => {
         ))}
       </ul>
 
-     <div className="flex justify-center mt-10">
-      <a
-        href="https://github.com/akash85246?tab=repositories"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block  text-white px-6 py-2 rounded-full font-semibold shadow-md hover:text-[#4433dd] transition"
-      >
-         More Projects on GitHub <ArrowForwardIosIcon></ArrowForwardIosIcon>
-       </a>
+      <div className="flex justify-center mt-5 md:mt-10 px-4">
+        <a
+          href="https://github.com/akash85246?tab=repositories"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:text-[#8b5cf6] hover:scale-105 transition-all duration-300 ease-in-out border border-white/10 backdrop-blur-sm text-xs sm:text-sm md:text-base lg:text-base"
+        >
+          More Projects on GitHub
+          <ArrowForwardIosIcon className="text-sm" />
+        </a>
       </div>
     </section>
   );

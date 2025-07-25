@@ -9,15 +9,18 @@ const username = import.meta.env.VITE_GITHUB_USER;
 
 function StatCard({ icon, title, value }) {
   return (
-    <div className="bg-white/5 backdrop-blur-md p-4 rounded-xl shadow-md border border-white/10 flex items-center gap-4 relative min-h-[100px]">
-      <div className="w-12 h-12 flex items-center justify-center text-white">
-        {icon}
-      </div>
+    <div className="backdrop-blur-sm p-4 sm:p-3 px-3 sm:px-4 rounded-xl shadow-md border border-white/10 flex items-center gap-3 sm:gap-4 relative min-h-[80px] sm:min-h-[100px] w-full max-w-sm">
+     
       <div className="w-full text-center">
-        <h3 className="text-white font-semibold text-sm absolute top-2 left-2">
+        <h3 className="text-white font-semibold text-[0.6rem] sm:text-sm absolute top-2 left-2">
           {title}
         </h3>
-        <p className="text-gray-300 text-2xl font-semibold mt-4">{value}</p>
+        <p className="text-gray-300 text-xl sm:text-2xl font-semibold mt-4">
+          {value}
+        </p>
+      </div>
+       <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-white text-xl sm:text-2xl">
+        {icon}
       </div>
     </div>
   );
@@ -119,7 +122,7 @@ function GithubActivity() {
       <ReactTooltip id="github-heatmap" />
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 my-2 sm:my-6">
         <StatCard
           icon={
             <Activity className="text-cyan-400 w-8 h-8 absolute bottom-2 right-2" />

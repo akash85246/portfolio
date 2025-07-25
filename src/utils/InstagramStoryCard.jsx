@@ -3,7 +3,10 @@ function InstagramStoryCard({ story, onClick }) {
   const isVideo = story.media_type === 'VIDEO';
 
   return (
-    <div className="flex flex-col items-center cursor-pointer" onClick={onClick}>
+    <div
+      className="flex flex-col items-center cursor-pointer w-20 sm:w-24 md:w-28 lg:w-32"
+      onClick={onClick}
+    >
       <div className="w-full aspect-square rounded-full overflow-hidden border-2 border-pink-500 bg-black flex items-center justify-center">
         {isImage && (
           <img
@@ -22,7 +25,7 @@ function InstagramStoryCard({ story, onClick }) {
           />
         )}
       </div>
-      <p className="text-xs mt-2 text-center text-gray-500">
+      <p className="text-[10px] sm:text-xs md:text-sm mt-2 text-center text-gray-500">
         {new Date(story.timestamp).toLocaleDateString()}
       </p>
     </div>

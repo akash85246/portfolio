@@ -39,7 +39,7 @@ function ProjectCard({
       } rounded-lg  shadow-md gap-5`}
     >
       {/* Carousel */}
-      <div className="relative h-[30rem] lg:w-2/3 w-full overflow-hidden rounded-md">
+      <div className="relative  sm:h-[30rem]  lg:w-2/3 w-full overflow-hidden rounded-md">
         <img
           src={images[currentIndex]}
           alt={`${title} image ${currentIndex + 1}`}
@@ -52,7 +52,7 @@ function ProjectCard({
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full ${
+              className={`h-2 w-2 md:w-3 md:h-3 rounded-full ${
                 index === currentIndex ? "highlight" : "normal"
               }`}
             />
@@ -76,15 +76,15 @@ function ProjectCard({
 
       {/* Content */}
       <div className="lg:w-1/3 w-full">
-        <h2 className="project-title text-xl font-semibold mb-2 orbitron">{title}</h2>
-        <p className="project-description text-gray-300 mb-4">{description}</p>
-        <ul className="project-tags flex flex-wrap gap-2 mb-4">
+        <h2 className="project-title text-lg sm:text-xl font-semibold mb-4 lg:mb-2 orbitron">{title}</h2>
+        <p className="project-description text-gray-300 mb-4 lg:mb-2 text-xs sm:text-sm md:text-base">{description}</p>
+        <ul className="project-tags flex flex-wrap gap-2 mb-4 lg:mb-2">
           {tags.map((tag, index) => (
             <span
               key={index}
               className="relative inline-block p-[1px] rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-indigo-500"
             >
-              <span className="block bg-black text-[#5544ff] px-3 py-1 rounded-full text-sm font-semibold tracking-wide uppercase  orbitron">
+              <span className="block bg-black text-[#5544ff] px-3 py-1 rounded-full text-xs md:text-sm font-semibold tracking-wide uppercase  orbitron">
                 {tag}
               </span>
             </span>
@@ -96,7 +96,7 @@ function ProjectCard({
               href={github}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
+              className="text-blue-600 hover:underline text-sm md:text-base"
             >
               GitHub
             </a>
@@ -106,7 +106,7 @@ function ProjectCard({
               href={link}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-green-600 hover:underline"
+              className="text-green-600 hover:underline text-sm md:text-base"
             >
               Live Demo
             </a>

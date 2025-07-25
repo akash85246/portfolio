@@ -8,15 +8,34 @@ import { useEyeBlink } from "./animation/useEyeBlink";
 import { useLegCrawlAnimation } from "./animation/useStaticCrawlAnimation";
 
 export default function Spider() {
+  
   const [ready, setReady] = useState(false);
   const group = useRef();
   const legsRef = useRef([]);
   const eyelidsRef = useRef([]);
   const object4Ref = useRef();
-   const isWalkingRef = useRef(false);
+  const isWalkingRef = useRef(false);
 
   const { scene, animations } = useGLTF("/models/spider.glb");
   const { actions, mixer } = useAnimations(animations, group);
+  const getScaleByWidth = (width) => {
+    if (width < 500) return 0.6;
+    if (width < 700) return 0.5;
+    if (width < 770) return 0.5;
+    if (width < 1024) return 0.8;
+    return 0.9; 
+  };
+
+  const [scale, setScale] = useState(getScaleByWidth(window.innerWidth));
+
+  useEffect(() => {
+  const handleResize = () => {
+    setScale(getScaleByWidth(window.innerWidth));
+  };
+
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
 
   useEffect(() => {
     const spiderParts = {
@@ -77,15 +96,15 @@ export default function Spider() {
     // });
 
     group.current.add(object4);
-// console.log("Available animations:", Object.keys(actions));
+    // console.log("Available animations:", Object.keys(actions));
     const idleAnim = actions?.["Idle1"];
-if (idleAnim) {
-  // console.log("Playing Idle1 animation", idleAnim);
-  idleAnim.play();
-  // idleAnim.paused = true;
-} else {
-  console.warn("Idle1 animation not found.");
-}
+    if (idleAnim) {
+      // console.log("Playing Idle1 animation", idleAnim);
+      idleAnim.play();
+      // idleAnim.paused = true;
+    } else {
+      console.warn("Idle1 animation not found.");
+    }
   }, [scene, actions]);
 
   useFrame((_, delta) => {
@@ -96,11 +115,11 @@ if (idleAnim) {
   // console.log("useEyeBlink initialized", eyelidsRef.current);
   // console.log("outside use effect", object4Ref.current);
   useAttackAnimation(object4Ref);
-useLegCrawlAnimation(object4Ref, isWalkingRef);
+  useLegCrawlAnimation(object4Ref, isWalkingRef);
   useWalkAnimation(group, isWalkingRef);
 
   return (
-    <group ref={group}>
+    <group ref={group} scale={scale}>
       {object4Ref.current && (
         <primitive
           object={object4Ref.current}

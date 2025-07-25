@@ -145,13 +145,18 @@ export default function SkillCard({ icon, name, color = "#cccccc", type }) {
 
   return (
     <div
-      className=" rounded-xl p-2 shadow-md  bg-transparent flex flex-col items-center justify-center hover:shadow-lg transition border  hover-fade-up"
-      style={{ borderColor: color }}
-    >
-      <div className="w-35 h-35 mb-2 overflow-hidden">{content}</div>
-      <p className="text-center text-lg font-medium" style={{ color: color }}>
-        {name}
-      </p>
-    </div>
+  className="backdrop-blur-sm rounded-xl p-4 shadow-md flex flex-col items-center justify-center hover:shadow-lg transition border hover-fade-up w-25 sm:w-35 md:w-56 lg:w-52 xl:w-62"
+  style={{ borderColor: color }}
+>
+  <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36 mb-3 overflow-hidden">
+    {content}
+  </div>
+  <p
+    className="text-center text-xs sm:text-sm mg:text-base lg:text-xl font-medium"
+    style={{ color: color }}
+  >
+    {name}
+  </p>
+</div>
   );
 }

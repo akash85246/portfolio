@@ -1,24 +1,22 @@
-import { use, useEffect, useRef, useState } from "react";
-import {
-  AttachFile,
-  DoneAll,
-  FiberManualRecord,
-  Send,
-} from "@mui/icons-material";
+import { useEffect, useRef, useState } from "react";
+import { DoneAll, FiberManualRecord, Send } from "@mui/icons-material";
+import PhotoIcon from "@mui/icons-material/Photo";
 import { useSelector, useDispatch } from "react-redux";
 import socket from "../socket";
 import { login, logout } from "../redux/slices/authSlice";
 import { setUser, clearUser } from "../redux/slices/userSlice";
+
+import MessageItem from "./MessageItem";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [file, setFile] = useState(null);
   const [isOnline, setIsOnline] = useState(false);
-  const [onlineUsers, setOnlineUsers] = useState([]);
   const [users, setUsers] = useState([]);
   const [unreadCounts, setUnreadCounts] = useState({});
   const [isUploading, setIsUploading] = useState(false);
+  const hasMounted = useRef(false);
 
   const bottomRef = useRef();
 
@@ -28,7 +26,7 @@ const Chat = () => {
   const isAdmin = user.email === import.meta.env.VITE_ADMIN_GMAIL;
   const adminId = import.meta.env.VITE_ADMIN_ID;
 
-  const [receiver_id, setreceiver_id] = useState(adminId);
+  const [receiver_id, setReceiver_id] = useState(isAdmin ? 2 : adminId);
 
   // Connect socket
   useEffect(() => {
@@ -44,22 +42,23 @@ const Chat = () => {
     }
 
     const handleReceiveMessage = (msg) => {
-      console.log("Received message", msg);
-      if (isAdmin && (msg.user_id !== receiver_id)) {
+      // console.log("Received message", msg);
+      if (isAdmin && msg.user_id !== receiver_id) {
         // Message is for another user — increase their unread count
         setUnreadCounts((prev) => ({
           ...prev,
           [msg.user_id]: (prev[msg.user_id] || 0) + 1,
         }));
       } else {
-       
         console.log("Received message for current user:", msg);
         setMessages((prev) => [...prev, msg]);
       }
     };
 
     const handleMessageSent = (msg) => {
-      setMessages((prev) => prev.filter((m) => m.id !== msg.id));
+      console.log("Confirmed message from server:", msg);
+
+      setMessages((prev) => [...prev, msg]);
     };
 
     const handleMessageDeleted = ({ message_id }) => {
@@ -72,13 +71,29 @@ const Chat = () => {
       );
     };
 
-    socket.on("online_users", (userList) => {
-      setOnlineUsers(userList);
+    const handleMessageReadAck = (msg) => {
+      console.log("Message read ack received:", msg);
+      console.log("Updating message status for:", msg.id, "to", msg.status);
+      console.log("Current messages:", messages);
+      setMessages((prev) =>
+        prev.map((m) => {
+          console.log("Updating message status for:", m.id, "to", msg.status);
+          return m.id === msg.id ? { ...m, status: "read" } : m;
+        })
+      );
+      console.log("Updated message status:", msg.status);
+      if (msg.user_id === userId) {
+        setUnreadCounts((prev) => ({
+          ...prev,
+          [msg.receiver_id]: 0,
+        }));
+      }
+    };
 
+    socket.on("online_users", (userList) => {
       setIsOnline(userList.includes(adminId));
 
       if (isAdmin) {
-
         socket.emit("get_all_users", (usersOrError) => {
           if (usersOrError?.error) {
             console.error("Error fetching users:", usersOrError.error);
@@ -86,8 +101,11 @@ const Chat = () => {
             return;
           }
 
-          setUsers(usersOrError); // Set state with fetched users
-
+          const filteredUsers = usersOrError.filter((user) => {
+            // console.log("User ID:", user.id, "Admin ID:", adminId);
+            return user.id != adminId;
+          });
+          setUsers(filteredUsers);
         });
       }
     });
@@ -96,6 +114,7 @@ const Chat = () => {
     socket.on("message_sent", handleMessageSent);
     socket.on("message_deleted", handleMessageDeleted);
     socket.on("message_edited", handleMessageEdited);
+    socket.on("message_read_ack", handleMessageReadAck);
 
     // Cleanup
     return () => {
@@ -104,14 +123,13 @@ const Chat = () => {
       socket.off("message_deleted", handleMessageDeleted);
       socket.off("message_edited", handleMessageEdited);
       socket.emit("user_disconnected", userId);
+      socket.off("message_read_ack", handleMessageReadAck);
       socket.disconnect();
     };
-  }, [userId, adminId, receiver_id, isAdmin]);
+  }, [user, userId, adminId, receiver_id, isAdmin,messages]);
 
   useEffect(() => {
     if (!receiver_id || !userId) return;
-
-  
 
     socket.emit("load_messages", {
       user_id: userId,
@@ -119,6 +137,7 @@ const Chat = () => {
     });
 
     const handleLoadMessages = (messages) => {
+      console.log("Loaded messages:", messages);
       setMessages(messages);
     };
 
@@ -131,32 +150,22 @@ const Chat = () => {
     };
   }, [receiver_id, userId]);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  // useEffect(() => {
+  //   console.log("Messages updated:", messages);
+  //   if (!hasMounted.current) {
+  //     hasMounted.current = true;
+  //     return;
+  //   }
+  //   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [messages]);
 
   const sendMessage = () => {
     if (!input && !file) return;
 
     const contentToSend = input || (file ? "File sent" : "");
 
-    const msg = {
-      receiver_id: receiver_id,
-      user_id: userId,
-      content: contentToSend,
-      file_url: file || null,
-      profile_photo: user.profile_picture,
-      created_at: new Date().toISOString(),
-    };
-
-    // Optimistically update UI
-    setMessages((prev) => [...prev, msg]);
-
-  
-
-    // Emit to backend
     socket.emit("send_message", {
-      receiver_id: receiver_id,
+      receiver_id,
       user_id: userId,
       content: contentToSend,
       file_url: file || null,
@@ -167,33 +176,36 @@ const Chat = () => {
     setFile(null);
   };
 
-const handleFileUpload = async (file) => {
-  if (!file) return;
-  setIsUploading(true);
+  const handleFileUpload = async (file) => {
+    if (!file) return;
+    setIsUploading(true);
 
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
-  formData.append("folder", import.meta.env.VITE_CLOUDINARY_UPLOAD_FOLDER);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append(
+      "upload_preset",
+      import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+    );
+    formData.append("folder", import.meta.env.VITE_CLOUDINARY_UPLOAD_FOLDER);
 
-  try {
-    const res = await fetch(import.meta.env.VITE_CLOUDINARY_UPLOAD_URL, {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const res = await fetch(import.meta.env.VITE_CLOUDINARY_UPLOAD_URL, {
+        method: "POST",
+        body: formData,
+      });
 
-    const data = await res.json();
-    if (data.secure_url) {
-      setFile(data.secure_url);
-    } else {
-      console.error("Cloudinary returned an error:", data);
+      const data = await res.json();
+      if (data.secure_url) {
+        setFile(data.secure_url);
+      } else {
+        console.error("Cloudinary returned an error:", data);
+      }
+    } catch (err) {
+      console.error("File upload error:", err);
     }
-  } catch (err) {
-    console.error("File upload error:", err);
-  }
 
-  setIsUploading(false);
-};
+    setIsUploading(false);
+  };
 
   // Handle logout
   const dispatch = useDispatch();
@@ -204,7 +216,7 @@ const handleFileUpload = async (file) => {
 
   return (
     <div
-      className={`bg-white/5 col-span-2 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-white/10 grid grid-cols-4 items-center justify-center gap-10 relative`}
+      className={`bg-white/5 col-span-7 md:col-span-2  backdrop-blur-md p-4 md:p-4 lg:p-8 rounded-2xl shadow-xl border border-white/10 grid grid-cols-4 items-center justify-center gap-10 relative`}
     >
       {isAdmin && (
         <div className=" min-h-full pr-2 border-r border-gray-700 hidden sm:block">
@@ -215,11 +227,11 @@ const handleFileUpload = async (file) => {
               className="flex items-center gap-2 p-2 hover:bg-gray-700 my-1 rounded cursor-pointer overflow-hidden "
               onClick={() => {
                 const newReceiverId = user.id === userId ? adminId : user.id;
-                setreceiver_id(newReceiverId);
+                setReceiver_id(newReceiverId);
                 if (receiver_id !== newReceiverId) {
-                  setreceiver_id(newReceiverId);
+                  setReceiver_id(newReceiverId);
                 }
-                console.log(newReceiverId, receiver_id, userId);
+                // console.log(newReceiverId, receiver_id, userId);
                 setUnreadCounts((prev) => ({
                   ...prev,
                   [user.id]: 0,
@@ -230,7 +242,7 @@ const handleFileUpload = async (file) => {
                 <img
                   src={user.profile_picture || "/default-avatar.png"}
                   alt="avatar"
-                  className="w-12 h-8 rounded-full object-cover"
+                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover"
                 />
                 {user.is_online && (
                   <span className="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full border border-white" />
@@ -239,7 +251,7 @@ const handleFileUpload = async (file) => {
                 {unreadCounts[user.id] > 0 && (
                   <span
                     id={`new-message-${user.id}`}
-                    className="absolute -top-1 -right-1 text-[10px] bg-red-500 text-white px-1 rounded-full"
+                    className="absolute -top-1 -right-1 text-[6px]  text-[10px] bg-red-500 text-white px-1 rounded-full"
                   >
                     +{unreadCounts[user.id]}
                   </span>
@@ -276,84 +288,51 @@ const handleFileUpload = async (file) => {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 h-[50vh] min-h-[50vh] max-h-[60vh]">
+        <div className="flex-1 overflow-y-auto p-2 md:p-4 space-y-3   min-h-[40vh] max-h-[45vh]  sm:min-h-[30rem] sm:max-h-[35rem]">
           {messages.map((msg) => (
-            <div
+            <MessageItem
               key={msg.id}
-              className={`flex items-end gap-2 ${
-                msg.user_id === userId ? "justify-end" : "justify-start"
-              }`}
-            >
-              {msg.user_id !== userId && (
-                <img
-                  src={msg.sender_profile_picture || "/default-avatar.png"}
-                  alt="avatar"
-                  className="w-8 h-8 rounded-full object-cover"
-                />
-              )}
-              <div className="flex flex-col items-start">
-                <div
-                  className={`rounded-lg px-4 py-2 max-w-[35rem] text-sm relative break-words ${
-                    msg.user_id === userId
-                      ? "bg-blue-600 text-white"
-                      : "bg-black/10 text-white"
-                  }`}
-                >
-                  {msg.file_url ? (
-                    <>
-                      <a
-                        href={msg.file_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-300 underline"
-                      >
-                        Photo
-                      </a>
-                      <span className="block text-gray-400 text-xs mt-1">
-                        {msg.content}
-                      </span>
-                    </>
-                  ) : (
-                    msg.content
-                  )}
-                  <DoneAll
-                    fontSize="small"
-                    className={`absolute bottom-1 right-1 text-gray-400`}
-                  />
-                </div>
-                <span className="text-[10px] mt-1 text-gray-400">
-                  {new Date(msg.created_at).toLocaleTimeString()}
-                </span>
-              </div>
-              {msg.user_id === userId && (
-                <img
-                  src={user.profile_picture || "/default-avatar.png"}
-                  alt="avatar"
-                  className="w-8 h-8 rounded-full object-cover"
-                />
-              )}
-            </div>
+              msg={msg}
+              userId={userId}
+              receiver_id={receiver_id}
+              isAdmin={isAdmin}
+              user={user}
+              socket={socket}
+            />
           ))}
           <div ref={bottomRef} />
         </div>
 
         {/* Input */}
-        <div>
+        <div className="w-full">
+          {/* Image/File Preview Before Sending */}
           {!isUploading && file && (
-            <div className="bg-green-100 text-green-800 p-2 rounded-lg mb-3 text-sm break-all">
-              📎 File uploaded:{" "}
-              <a
-                href={file}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-green-900"
-              >
-                {file}
-              </a>
+            <div className="bg-black/20 p-3 rounded-lg mb-3 text-sm text-white border border-gray-600">
+              <div className="flex items-start gap-3">
+                <img
+                  src={file}
+                  alt="preview"
+                  className="max-w-[120px] max-h-[120px] object-contain rounded-md border border-gray-500"
+                />
+                <div className="flex flex-col justify-between">
+                  <p className="mb-1 break-all text-[0.8rem] sm:text-xs text-gray-300">
+                    📎 Image ready to send:
+                  </p>
+                  <a
+                    href={file}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 underline break-all text-[0.8rem] sm:text-xs"
+                  >
+                    {file}
+                  </a>
+                </div>
+              </div>
             </div>
           )}
 
-          <div className="border-t border-gray-700 p-3 flex items-center gap-3">
+          {/* Chat Input Area */}
+          <div className="border-t border-gray-700 p-2 sm:p-3 flex items-center gap-2 sm:gap-3 bg-black/10 rounded-lg">
             {!isUploading && (
               <>
                 <input
@@ -365,31 +344,32 @@ const handleFileUpload = async (file) => {
                 />
                 <label
                   htmlFor="fileInput"
-                  className="cursor-pointer text-gray-400"
+                  className="cursor-pointer text-gray-400 hover:text-white"
                 >
-                  <AttachFile />
+                  <PhotoIcon />
                 </label>
               </>
             )}
+
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="flex-1 bg-black/10 text-white py-2 px-4 rounded-full outline-none"
+              className="flex-1 bg-transparent text-white p-2 sm:py-2 sm:px-4 rounded-full border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400 text-[0.8rem] w-[100%] sm:text-base"
               placeholder="Type a message..."
             />
+
             <button
               onClick={sendMessage}
               disabled={isUploading}
-              className={`p-2 aspect-[1/1] rounded-full transition 
-    ${
-      isUploading
-        ? "bg-gray-500 cursor-not-allowed"
-        : "bg-black/20 hover:bg-black/30"
-    }
-  `}
+              className={`p-1 sm:p-2 aspect-square rounded-full transition 
+        ${
+          isUploading
+            ? "bg-gray-500 cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-700"
+        }`}
             >
-              <Send className="text-white" />
+              <Send className="text-white text-[0.8rem] sm:text-base" />
             </button>
           </div>
         </div>
