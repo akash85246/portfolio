@@ -50,6 +50,7 @@ useEffect(() => {
   const homeEl = document.getElementById("home");
   const aboutEl = document.getElementById("about");
   const contactEl = document.getElementById("contact");
+  const footerEl = document.getElementById("footer");
 
   let isSpiderOut = false;
 
@@ -58,38 +59,37 @@ useEffect(() => {
       const homeVisible = entries.find(e => e.target.id === "home")?.isIntersecting ?? false;
       const aboutVisible = entries.find(e => e.target.id === "about")?.isIntersecting ?? false;
       const contactVisible = entries.find(e => e.target.id === "contact")?.isIntersecting ?? false;
+      const footerVisible = entries.find(e => e.target.id === "footer")?.isIntersecting ?? false;
 
       // Scroll Down: Spider exits only if both not visible
-      console.log(!homeVisible , !aboutVisible,!isSpiderOut);
-      console.log("🕷️ Spider visibility check:", ((!homeVisible && !aboutVisible && !contactVisible) && !isSpiderOut));
-      if (((!homeVisible && !aboutVisible && !contactVisible) && !isSpiderOut)) {
-        console.log("🕷️ Spider is exiting");
+     
+      if (((!(homeVisible ||aboutVisible ) && (!(contactVisible|| footerVisible))) && !isSpiderOut)) {
         target.current = new THREE.Vector3(-350, 0, 605); // Exit position
         isWalkingRef.current = true;
         isSpiderOut = true;
       }
 
       // Scroll Up or visible again: Spider comes back if any is visible
-      console.log(homeVisible, aboutVisible, contactVisible, isSpiderOut);
-      console.log(((homeVisible || aboutVisible ||contactVisible ) && isSpiderOut));
-      if (((homeVisible || aboutVisible ||contactVisible ) && isSpiderOut)) {
-        console.log("🕷️ Spider is coming back");
+     
+      if (((homeVisible || aboutVisible ||(contactVisible || footerVisible)) && isSpiderOut)) {
         target.current = new THREE.Vector3(0, 0, 0); // Entry position
         isWalkingRef.current = true;
         isSpiderOut = false;
       }
     },
-    { threshold: 0.9 }
+    { threshold: 0.6 }
   );
 
   if (homeEl) observer.observe(homeEl);
   if (aboutEl) observer.observe(aboutEl);
   if (contactEl) observer.observe(contactEl);
+  if (footerEl) observer.observe(footerEl);
 
   return () => {
     if (homeEl) observer.unobserve(homeEl);
     if (aboutEl) observer.unobserve(aboutEl);
     if (contactEl) observer.unobserve(contactEl);
+    if (footerEl) observer.unobserve(footerEl);
   };
 }, []);
 

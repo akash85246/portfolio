@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { DoneAll, FiberManualRecord, Send } from "@mui/icons-material";
+import { X } from "lucide-react";
 import PhotoIcon from "@mui/icons-material/Photo";
 import { useSelector, useDispatch } from "react-redux";
 import socket from "../socket";
@@ -16,6 +17,8 @@ const Chat = () => {
   const [users, setUsers] = useState([]);
   const [unreadCounts, setUnreadCounts] = useState({});
   const [isUploading, setIsUploading] = useState(false);
+  const [selectedReply, setSelectedReply] = useState(null);
+  const [selectedUpdate, setSelectedUpdate] = useState(null);
   const hasMounted = useRef(false);
 
   const bottomRef = useRef();
@@ -34,7 +37,7 @@ const Chat = () => {
       socket.connect();
 
       socket.on("connect", () => {
-        console.log("Connected with socket ID:", socket.id);
+        // console.log("Connected with socket ID:", socket.id);
         socket.emit("user_connected", userId, receiver_id);
       });
     } else {
@@ -126,7 +129,7 @@ const Chat = () => {
       socket.off("message_read_ack", handleMessageReadAck);
       socket.disconnect();
     };
-  }, [user, userId, adminId, receiver_id, isAdmin,messages]);
+  }, [user, userId, adminId, receiver_id, isAdmin, messages]);
 
   useEffect(() => {
     if (!receiver_id || !userId) return;
@@ -137,7 +140,7 @@ const Chat = () => {
     });
 
     const handleLoadMessages = (messages) => {
-      console.log("Loaded messages:", messages);
+      // console.log("Loaded messages:", messages);
       setMessages(messages);
     };
 
@@ -163,17 +166,20 @@ const Chat = () => {
     if (!input && !file) return;
 
     const contentToSend = input || (file ? "File sent" : "");
-
+    console.log(selectedReply?.id, "Selected Reply ID");
     socket.emit("send_message", {
       receiver_id,
       user_id: userId,
       content: contentToSend,
       file_url: file || null,
       ipAddress: "N/A",
+      response_to: selectedReply?.id || null,
     });
 
+    // Reset input, file and reply state
     setInput("");
     setFile(null);
+    setSelectedReply(null);
   };
 
   const handleFileUpload = async (file) => {
@@ -214,6 +220,26 @@ const Chat = () => {
     dispatch(logout());
   };
 
+  async function updateMessage() {
+  if (!selectedUpdate || (!input && !file)) return;
+
+  socket.emit("edit_message", {
+    message_id: selectedUpdate.id,
+    new_content: input || null,
+    new_file_url: file || null,
+  });
+
+  setSelectedUpdate(null);
+  setInput("");
+  setFile(null);
+}
+
+  useEffect(() => {
+  if (selectedUpdate) {
+    setInput(selectedUpdate.content);
+  }
+}, [selectedUpdate]);
+
   return (
     <div
       className={`bg-white/5 col-span-7 md:col-span-2  backdrop-blur-md p-4 md:p-4 lg:p-8 rounded-2xl shadow-xl border border-white/10 grid grid-cols-4 items-center justify-center gap-10 relative`}
@@ -251,7 +277,7 @@ const Chat = () => {
                 {unreadCounts[user.id] > 0 && (
                   <span
                     id={`new-message-${user.id}`}
-                    className="absolute -top-1 -right-1 text-[6px]  text-[10px] bg-red-500 text-white px-1 rounded-full"
+                    className="absolute -top-1 -right-1 text-[6px]  sm:text-[10px] bg-red-500 text-white px-1 rounded-full"
                   >
                     +{unreadCounts[user.id]}
                   </span>
@@ -298,6 +324,13 @@ const Chat = () => {
               isAdmin={isAdmin}
               user={user}
               socket={socket}
+              selectedReply={selectedReply}
+              setSelectedReply={setSelectedReply}
+              setSelectedUpdate={setSelectedUpdate}
+              selectedUpdate={selectedUpdate}
+              setMessages={setMessages}
+              isOwnMessage={msg.user_id === userId}
+              allMessages={messages}
             />
           ))}
           <div ref={bottomRef} />
@@ -306,11 +339,25 @@ const Chat = () => {
         {/* Input */}
         <div className="w-full">
           {/* Image/File Preview Before Sending */}
-          {!isUploading && file && (
-            <div className="bg-black/20 p-3 rounded-lg mb-3 text-sm text-white border border-gray-600">
+          {((!isUploading && selectedUpdate?.file_url)||(!isUploading && file)) && (
+            <div className="relative bg-black/20 p-3 rounded-lg mb-3 text-sm text-white border border-gray-600">
+              {/* Close Button */}
+              <button
+                onClick={() => setFile(null)}
+                className="absolute top-2 right-2 text-gray-400 hover:text-white transition"
+                aria-label="Remove File"
+              >
+                <X className="w-4 h-4" onClick={()=>{
+                  setFile(null);
+                  setSelectedUpdate(null);
+                  setInput("");
+                }}/>
+              </button>
+             
+
               <div className="flex items-start gap-3">
                 <img
-                  src={file}
+                  src={selectedUpdate ? selectedUpdate.file_url :file}
                   alt="preview"
                   className="max-w-[120px] max-h-[120px] object-contain rounded-md border border-gray-500"
                 />
@@ -319,13 +366,48 @@ const Chat = () => {
                     📎 Image ready to send:
                   </p>
                   <a
-                    href={file}
+                    href={selectedUpdate ? selectedUpdate.file_url :file}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-400 underline break-all text-[0.8rem] sm:text-xs"
                   >
-                    {file}
+                    {selectedUpdate ? selectedUpdate.file_url :file}
                   </a>
+                </div>
+              </div>
+            </div>
+          )}
+
+
+          {selectedReply && (
+            <div className="relative bg-black/30 border border-gray-700 text-white rounded-lg p-3 mb-3 shadow-sm backdrop-blur-md">
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedReply(null)}
+                className="absolute top-2 right-2 text-gray-400 hover:text-white transition"
+                aria-label="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              <div className="flex gap-3 items-start">
+                {/* Image/File Preview */}
+                {selectedReply.file_url && (
+                  <img
+                    src={selectedReply.file_url}
+                    alt="Attachment"
+                    className="max-w-[100px] max-h-[100px] object-contain rounded-md border border-gray-600"
+                  />
+                )}
+
+                {/* Text & Timestamp */}
+                <div className="flex-1">
+                  <p className="text-sm text-gray-300 break-words mb-1">
+                    {selectedReply.content || "No message content"}
+                  </p>
+                  <span className="text-xs text-gray-400">
+                    {new Date(selectedReply.created_at).toLocaleString()}
+                  </span>
                 </div>
               </div>
             </div>
@@ -360,7 +442,9 @@ const Chat = () => {
             />
 
             <button
-              onClick={sendMessage}
+              onClick={() => {
+                selectedUpdate ? updateMessage() : sendMessage();
+              }}
               disabled={isUploading}
               className={`p-1 sm:p-2 aspect-square rounded-full transition 
         ${
