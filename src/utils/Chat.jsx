@@ -19,7 +19,7 @@ const Chat = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [selectedReply, setSelectedReply] = useState(null);
   const [selectedUpdate, setSelectedUpdate] = useState(null);
-  const hasMounted = useRef(false);
+  // const hasMounted = useRef(false);
 
   const bottomRef = useRef();
 
@@ -32,118 +32,27 @@ const Chat = () => {
 
   const [receiver_id, setReceiver_id] = useState(isAdmin ? 2 : adminId);
 
-  // Connect socket
-  // useEffect(() => {
-  //   if (!socket.connected) {
-  //     socket.connect();
-
-  //     socket.on("connect", () => {
-
-  //       socket.emit("user_connected", userId, receiver_id);
-  //     });
-  //   } else {
-  //     socket.emit("user_connected", userId);
-  //   }
-
-  //   const handleReceiveMessage = (msg) => {
-
-  //     if (isAdmin && msg.user_id !== receiver_id) {
-
-  //       setUnreadCounts((prev) => ({
-  //         ...prev,
-  //         [msg.user_id]: (prev[msg.user_id] || 0) + 1,
-  //       }));
-  //     } else {
-  //       console.log("Received message for current user:", msg);
-  //       setMessages((prev) => [...prev, msg]);
-  //     }
-  //   };
-
-  //   const handleMessageSent = (msg) => {
-
-  //     setMessages((prev) => [...prev, msg]);
-  //   };
-
-  //   const handleMessageDeleted = ({ message_id }) => {
-  //     setMessages((prev) => prev.filter((msg) => msg.id !== message_id));
-  //   };
-
-  //   const handleMessageEdited = (updatedMsg) => {
-  //     setMessages((prev) =>
-  //       prev.map((msg) => (msg.id === updatedMsg.id ? updatedMsg : msg))
-  //     );
-  //   };
-
-  //   const handleMessageReadAck = (msg) => {
-
-  //     setMessages((prev) =>
-  //       prev.map((m) => {
-  //         console.log("Updating message status for:", m.id, "to", msg.status);
-  //         return m.id === msg.id ? { ...m, status: "read" } : m;
-  //       })
-  //     );
-  //     console.log("Updated message status:", msg.status);
-  //     if (msg.user_id === userId) {
-  //       setUnreadCounts((prev) => ({
-  //         ...prev,
-  //         [msg.receiver_id]: 0,
-  //       }));
-  //     }
-  //   };
-
-  //   socket.on("online_users", (userList) => {
-  //     setIsOnline(userList.includes(adminId));
-
-  //     if (isAdmin) {
-  //       socket.emit("get_all_users", (usersOrError) => {
-  //         if (usersOrError?.error) {
-  //           console.error("Error fetching users:", usersOrError.error);
-
-  //           return;
-  //         }
-
-  //         const filteredUsers = usersOrError.filter((user) => {
-  //           setUnreadCounts((prev) => ({
-  //             ...prev,
-  //             [user.id]: user.unread_count || 0,
-  //           }));
-  //           return user.id != adminId;
-  //         });
-  //         setUsers(filteredUsers);
-  //       });
-  //     }
-  //   });
-  //   // Add listeners
-  //   socket.on("receive_message", handleReceiveMessage);
-  //   socket.on("message_sent", handleMessageSent);
-  //   socket.on("message_deleted", handleMessageDeleted);
-  //   socket.on("message_edited", handleMessageEdited);
-  //   socket.on("message_read_ack", handleMessageReadAck);
-
-  //   // Cleanup
-  //   return () => {
-  //     socket.off("receive_message", handleReceiveMessage);
-  //     socket.off("message_sent", handleMessageSent);
-  //     socket.off("message_deleted", handleMessageDeleted);
-  //     socket.off("message_edited", handleMessageEdited);
-  //     socket.emit("user_disconnected", userId);
-  //     socket.off("message_read_ack", handleMessageReadAck);
-  //     socket.disconnect();
-  //   };
-  // }, [user, userId, adminId, receiver_id, isAdmin, messages]);
-
   useEffect(() => {
+    const handleConnect = () => {
+      socket.emit("user_connected", userId, receiver_id);
+      setIsOnline(true);
+    };
+
+    const handleDisconnect = () => {
+      setIsOnline(false);
+    };
+
     if (!socket.connected) {
       socket.connect();
-      socket.on("connect", () => {
-        socket.emit("user_connected", userId, receiver_id);
-      });
-    } else {
-      socket.emit("user_connected", userId);
     }
+
+    socket.on("connect", handleConnect);
+    socket.on("disconnect", handleDisconnect);
 
     return () => {
       socket.emit("user_disconnected", userId);
+      socket.off("connect", handleConnect);
+      socket.off("disconnect", handleDisconnect);
       socket.disconnect();
     };
   }, [userId, receiver_id]);
@@ -202,32 +111,26 @@ const Chat = () => {
   }, [userId, receiver_id, isAdmin]);
 
   useEffect(() => {
-    socket.on("online_users", (userList) => {
-      setIsOnline(userList.includes(adminId));
+    if (isAdmin) {
+      socket.emit("get_all_users", (usersOrError) => {
+        if (usersOrError?.error) {
+          console.error("Error fetching users:", usersOrError.error);
+          return;
+        }
 
-      if (isAdmin) {
-        socket.emit("get_all_users", (usersOrError) => {
-          if (usersOrError?.error) {
-            console.error("Error fetching users:", usersOrError.error);
-            return;
-          }
-
-          const filteredUsers = usersOrError.filter((user) => {
-            setUnreadCounts((prev) => ({
-              ...prev,
-              [user.id]: user.unread_count || 0,
-            }));
-            return user.id !== adminId;
-          });
-
-          setUsers(filteredUsers);
+        const filteredUsers = usersOrError.filter((user) => {
+          setUnreadCounts((prev) => ({
+            ...prev,
+            [user.id]: user.unread_count || 0,
+          }));
+          return user.id !== adminId;
         });
-      }
-    });
 
-    return () => {
-      socket.off("online_users");
-    };
+        setUsers(filteredUsers);
+      });
+    }
+
+    
   }, [isAdmin, adminId]);
 
   useEffect(() => {
@@ -271,7 +174,7 @@ const Chat = () => {
       user_id: userId,
       content: contentToSend,
       file_url: file || null,
-      ipAddress:  ipAddress||"N/A",
+      ipAddress: ipAddress || "N/A",
       response_to: selectedReply?.id || null,
     });
 
@@ -407,7 +310,9 @@ const Chat = () => {
             <FiberManualRecord
               className={isOnline ? "text-green-400" : "text-gray-400"}
             />
-            <span className="text-sm">{isOnline ? "Online" : "......Connecting"}</span>
+            <span className="text-sm">
+              {isOnline ? "Online" : "......Connecting"}
+            </span>
           </div>
           <button onClick={handleLogout}> Logout</button>
         </div>
