@@ -34,17 +34,17 @@ export function useWalkAnimation(groupRef, isWalkingRef) {
   }, [camera, gl]);
 
   // Entrance animation trigger
-  useEffect(() => {
-    // console.log("🕷️ Spider entrance animation started");
-    if (!groupRef.current) return;
+  // useEffect(() => {
+  //   // console.log("🕷️ Spider entrance animation started");
+  //   if (!groupRef.current) return;
 
-    // console.log("🕷️ Spider groupRef is ready for entrance animation");
+  //   // console.log("🕷️ Spider groupRef is ready for entrance animation");
 
-    // Start spider offscreen (top-right corner)
-    groupRef.current.position.set(10, 0, 205); // Adjust as needed
-    target.current = new THREE.Vector3(0, 0, 0);
-    isWalkingRef.current = true;
-  }, []);
+  //   // Start spider offscreen (top-right corner)
+  //   groupRef.current.position.set(10, 0, 205); // Adjust as needed
+  //   target.current = new THREE.Vector3(0, 0, 0);
+  //   isWalkingRef.current = true;
+  // }, []);
 
 useEffect(() => {
   const homeEl = document.getElementById("home");

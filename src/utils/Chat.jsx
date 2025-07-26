@@ -401,18 +401,18 @@ const Chat = () => {
         }`}
       >
         {/* Header */}
-        <div className="flex justify-between items-center">
-          <div className="p-4 border-b border-gray-700 flex items-center gap-2">
+        <div className="flex justify-between items-center border-b border-gray-700">
+          <div className="p-4  flex items-center gap-2">
             <FiberManualRecord
               className={isOnline ? "text-green-400" : "text-gray-400"}
             />
-            <span className="text-sm">{isOnline ? "Online" : "Offline"}</span>
+            <span className="text-sm">{isOnline ? "Online" : "......Connecting"}</span>
           </div>
           <button onClick={handleLogout}> Logout</button>
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-2 md:p-4 space-y-3   min-h-[40vh] max-h-[45vh]  sm:min-h-[30rem] sm:max-h-[35rem]">
+        <div className="flex-1 overflow-y-auto p-2 md:p-4 space-y-3   min-h-[35vh] max-h-[40vh]  sm:min-h-[30rem] sm:max-h-[35rem]">
           {messages.map((msg) => (
             <MessageItem
               key={msg.id}

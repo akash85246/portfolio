@@ -74,22 +74,29 @@ function Certificate() {
         <h1 className="section-heading text-left">CERTIFICATES</h1>
       </div>
 
-      <div className="flex flex-col gap-1 sm:gap-2 md:gap-5">
-        <div className="gap-1 sm:gap-2 md:gap-5 grid-cols-5 grid md:grid-cols-3">
-          <img src={fullstack} className=" md:aspect-[3/2] col-span-3 md:col-span-2 h-full object-centre" />
-          <div className="gap-1 sm:gap-2 md:gap-5 grid grid-cols-1 col-span-2 md:col-span-1 ">
-            <img src={sql} className=" aspect-[3/2] w-full "></img>
-            <img src={ibm} className=" aspect-[3/2] w-full "></img>
-          </div>
-        </div>
-        <div className="gap-1 sm:gap-2 md:gap-5 grid-cols-5 grid md:grid-cols-3">
-          <div className="gap-1 sm:gap-2 md:gap-5 grid grid-cols-1 col-span-2 md:col-span-1 ">
-            <img src={vihaan} className=" aspect-[3/2] w-full "></img>
-            <img src={gdsc} className=" aspect-[3/2] w-full "></img>
-          </div>
-          <img src={pbel} className=" md:aspect-[3/2] col-span-3 md:col-span-2 h-full object-centre"/>
-        </div>
-      </div>
+     <div className="flex flex-col gap-1 sm:gap-2 md:gap-5">
+  <div className="gap-1 sm:gap-2 md:gap-5 grid-cols-5 grid md:grid-cols-3">
+    <img
+      src={fullstack}
+      className="md:aspect-[3/2] col-span-3 md:col-span-2 w-full object-cover"
+    />
+    <div className="gap-1 sm:gap-2 md:gap-5 grid grid-cols-1 col-span-2 md:col-span-1">
+      <img src={sql} className="aspect-[3/2] w-full object-cover" />
+      <img src={ibm} className="aspect-[3/2] w-full object-cover" />
+    </div>
+  </div>
+
+  <div className="gap-1 sm:gap-2 md:gap-5 grid-cols-5 grid md:grid-cols-3">
+    <div className="gap-1 sm:gap-2 md:gap-5 grid grid-cols-1 col-span-2 md:col-span-1">
+      <img src={vihaan} className="aspect-[3/2] w-full object-cover" />
+      <img src={gdsc} className="aspect-[3/2] w-full object-cover" />
+    </div>
+    <img
+      src={pbel}
+      className="md:aspect-[3/2] col-span-3 md:col-span-2 w-full object-cover"
+    />
+  </div>
+</div>
 
       <div>
         <h1 className="pt-5 md:pt-10 text-xl sm:text-2xl md:text-3xl text-[#00bcd4] mb-2 orbitron text-left ">
