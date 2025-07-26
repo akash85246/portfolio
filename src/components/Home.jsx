@@ -1,4 +1,4 @@
-import { use } from "react";
+
 import RobotModel from "./RobotModel";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,48 +14,31 @@ function Home() {
   const dispatch = useDispatch();
 
   function formatNumber(num) {
-    if (num >= 1_000_000) {
-      const formatted = (num / 1_000_000).toFixed(1);
-      return formatted.length > 3
-        ? Math.round(num / 1_000_000) + "M"
-        : formatted + "M";
-    }
-    if (num >= 1_000) {
-      const formatted = (num / 1_000).toFixed(1);
-      return formatted.length > 3
-        ? Math.round(num / 1_000) + "K"
-        : formatted + "K";
-    }
-    return num.toString();
-  }
-  function formatNumber10(num) {
   if (num >= 1_000_000) {
-    const rounded = Math.round(num / 10_000) * 10_000; // nearest 10K
+    const rounded = Math.round(num / 10_000) * 10_000; 
     const formatted = (rounded / 1_000_000).toFixed(1);
     return formatted.replace(/\.0$/, "") + "M+";
   }
   if (num >= 1_000) {
-    const rounded = Math.round(num / 100) * 100; // nearest 100
+    const rounded = Math.round(num / 100) * 100; 
     const formatted = (rounded / 1_000).toFixed(1);
     return formatted.replace(/\.0$/, "") + "K+";
   }
 
-  const rounded = Math.round(num / 10) * 10; // nearest 10
+  const rounded = Math.round(num / 10) * 10; 
   return rounded.toString() + "+";
 }
 
   useEffect(() => {
-    console.log("IP Address from Redux:", ipAddress);
     const getIpAddress = async () => {
       try {
-        console.log("Fetching IP address...");
+       
         const response = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/api/ip`
         );
         const ip = response.data.ip;
-        console.log("IP Address:", ip);
         dispatch(setIpAddress(ip));
-        console.log("IP Address:", ip);
+       
       } catch (error) {
         console.error("Error fetching or posting view:", error);
       }
@@ -85,10 +68,11 @@ function Home() {
         const response = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/api/view/count`
         );
-        console.log("View count response:", response.data);
+       
         setViewCount(response.data.total_views || 0);
       } catch (error) {
         console.error("Error fetching view count:", error);
+        setViewCount("20");
       }
     };
     fetchViewCount();
@@ -136,8 +120,7 @@ function Home() {
           }
         }
 
-        const formattedTotal = formatNumber10(total);
-        console.log("Total commits:", formattedTotal);
+        const formattedTotal = formatNumber(total);
         setTotalCommits(formattedTotal);
       } catch (error) {
         console.error("Error fetching commits:", error);
@@ -199,7 +182,7 @@ function Home() {
               </div>
               <div>
                 <p className="text-2xl md:text-5xl lg:text-7xl font-bold">
-                  {totalCommits||"280"}
+                  {totalCommits||"280+"}
                 </p>
                 <p className="text-sm md:text-lg font-semibold">COMMITS</p>
               </div>

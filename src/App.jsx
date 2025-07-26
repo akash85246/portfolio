@@ -9,25 +9,27 @@ import Layout from "./layouts/layout";
 import SpiderController from "./components/SpiderController";
 import { useEffect } from "react";
 import { useProgress } from "@react-three/drei";
-import { useState } from "react";
 import LoadingScreen from "./components/LoadingScreen";
-
+import { useSelector, useDispatch } from "react-redux";
+import { clearLoading } from "./redux/slices/loadingSlice";
 function App() {
   const { progress } = useProgress();
-  const [isLoaded, setIsLoaded] = useState(false);
+  const isLoading = useSelector((state) => state.loading.isLoading);
+  const dispatch = useDispatch();
+  
 
   useEffect(() => {
     if (progress >= 100) {
       const timeout = setTimeout(() => {
-        setIsLoaded(true);
-      }, 500); // Smooth delay to remove loader
+        dispatch(clearLoading());
+      }, 700); 
       return () => clearTimeout(timeout);
     }
-  }, [progress]);
+  }, [progress, dispatch]);
 
   return (
     <>
-      {!isLoaded && <LoadingScreen />}
+      {isLoading && <LoadingScreen />}
       <Layout>
         <div
           className={`fixed top-8 sm:-top-16 md:top-0 lg:top-16 -right-32 sm:-right-52   md:-right-80 lg:-right-96 w-[100vw] md:w-[60rem] lg:w-[90vw] h-full sm:h-[80vh] md:h-full -z-10 pointer-events-none transition-opacity duration-300 `}

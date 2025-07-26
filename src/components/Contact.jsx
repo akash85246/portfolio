@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { login, logout } from "../redux/slices/authSlice";
 import { setUser, clearUser } from "../redux/slices/userSlice";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import Chat from "../utils/Chat.jsx";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
