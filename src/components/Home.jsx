@@ -1,18 +1,170 @@
-import SpiderController from "./SpiderController";
+import { use } from "react";
 import RobotModel from "./RobotModel";
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { setIpAddress } from "../redux/slices/IpAddressSlice";
 
-
-
+import { useEffect, useState } from "react";
 
 function Home() {
+  const [viewCount, setViewCount] = useState("");
+  const [totalCommits, setTotalCommits] = useState("");
+  const ipAddress = useSelector((state) => state.ipAddress.ipAddress);
+  const userId = useSelector((state) => state.user.id);
+  const dispatch = useDispatch();
+
+  function formatNumber(num) {
+    if (num >= 1_000_000) {
+      const formatted = (num / 1_000_000).toFixed(1);
+      return formatted.length > 3
+        ? Math.round(num / 1_000_000) + "M"
+        : formatted + "M";
+    }
+    if (num >= 1_000) {
+      const formatted = (num / 1_000).toFixed(1);
+      return formatted.length > 3
+        ? Math.round(num / 1_000) + "K"
+        : formatted + "K";
+    }
+    return num.toString();
+  }
+  function formatNumber10(num) {
+  if (num >= 1_000_000) {
+    const rounded = Math.round(num / 10_000) * 10_000; // nearest 10K
+    const formatted = (rounded / 1_000_000).toFixed(1);
+    return formatted.replace(/\.0$/, "") + "M+";
+  }
+  if (num >= 1_000) {
+    const rounded = Math.round(num / 100) * 100; // nearest 100
+    const formatted = (rounded / 1_000).toFixed(1);
+    return formatted.replace(/\.0$/, "") + "K+";
+  }
+
+  const rounded = Math.round(num / 10) * 10; // nearest 10
+  return rounded.toString() + "+";
+}
+
+  useEffect(() => {
+    console.log("IP Address from Redux:", ipAddress);
+    const getIpAddress = async () => {
+      try {
+        console.log("Fetching IP address...");
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/ip`
+        );
+        const ip = response.data.ip;
+        console.log("IP Address:", ip);
+        dispatch(setIpAddress(ip));
+        console.log("IP Address:", ip);
+      } catch (error) {
+        console.error("Error fetching or posting view:", error);
+      }
+    };
+
+    if (!ipAddress) {
+      getIpAddress();
+    }
+
+    // Now post the view
+    const postView = async () => {
+      try {
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/view/`, {
+          ip_address: ipAddress,
+          user_id: userId || null,
+        });
+      } catch (error) {
+        console.error("Error posting view:", error);
+      }
+    };
+    if (ipAddress) {
+      postView();
+    }
+
+    const fetchViewCount = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/view/count`
+        );
+        console.log("View count response:", response.data);
+        setViewCount(response.data.total_views || 0);
+      } catch (error) {
+        console.error("Error fetching view count:", error);
+      }
+    };
+    fetchViewCount();
+  }, [dispatch, ipAddress, userId]);
+
+   useEffect(() => {
+    const fetchTotalCommits = async () => {
+      const GITHUB_USERNAME = import.meta.env.VITE_GITHUB_USER;
+      const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
+      if (!GITHUB_USERNAME || !GITHUB_TOKEN) {
+        console.error("GitHub username or token is not set in environment variables.");
+        return;
+      }
+
+      try {
+        const headers = {
+          Authorization: `Bearer ${GITHUB_TOKEN}`,
+        };
+
+        const reposRes = await axios.get(
+          `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100`,
+          { headers }
+        );
+        const repos = reposRes.data;
+
+        let total = 0;
+
+        for (const repo of repos) {
+          try {
+            const contributorsRes = await axios.get(
+              `https://api.github.com/repos/${GITHUB_USERNAME}/${repo.name}/stats/contributors`,
+              { headers }
+            );
+
+            const stats = contributorsRes.data;
+            if (Array.isArray(stats)) {
+              const userStat = stats.find(
+                (contributor) =>
+                  contributor.author?.login === GITHUB_USERNAME
+              );
+              if (userStat) total += userStat.total;
+            }
+          } catch (err) {
+            console.warn(`Stats not ready for ${repo.name}`, err);
+          }
+        }
+
+        const formattedTotal = formatNumber10(total);
+        console.log("Total commits:", formattedTotal);
+        setTotalCommits(formattedTotal);
+      } catch (error) {
+        console.error("Error fetching commits:", error);
+      }
+    };
+
+    fetchTotalCommits();
+  }, []);
+
+
   return (
-    <section className="relative  text-white  md:h-[60vh] lg:h-[95vh] " id="home">
+    <section
+      className="relative  text-white  md:h-[60vh] lg:h-[95vh] "
+      id="home"
+    >
       {/* Vertical Side Social Links */}
       <div className="absolute left-5 sm:left-8 md:left-10 lg:left-12 top-80 md:top-52  lg:top-96 md:mt-60 lg:mt-32  transform -translate-y-1/2 flex flex-col gap-40 md:gap-52  lg:gap-70">
-        <a href="https://github.com/akash85246" className="transform -rotate-90 origin-left tracking-widest text-xs sm:text-sm  md:text-lg lg:text-xl font-bold">
+        <a
+          href="https://github.com/akash85246"
+          className="transform -rotate-90 origin-left tracking-widest text-xs sm:text-sm  md:text-lg lg:text-xl font-bold"
+        >
           GITHUB
         </a>
-        <a href="https://www.linkedin.com/in/akash-rajput-dev/" className="transform -rotate-90 origin-left tracking-widest text-xs sm:text-sm  md:text-lg lg:text-xl font-bold">
+        <a
+          href="https://www.linkedin.com/in/akash-rajput-dev/"
+          className="transform -rotate-90 origin-left tracking-widest text-xs sm:text-sm  md:text-lg lg:text-xl font-bold"
+        >
           LINKEDIN
         </a>
       </div>
@@ -40,18 +192,21 @@ function Home() {
             {/* Stats */}
             <div className="mt-0 flex gap-10 md:gap-16 lg:gap-36  md:pr-16 lg:pr-20 w-full  text-center orbitron">
               <div>
-                <p className="text-2xl md:text-5xl lg:text-7xl font-bold">12K</p>
+                <p className="text-2xl md:text-5xl lg:text-7xl font-bold">
+                  {viewCount}
+                </p>
                 <p className="text-sm md:text-lg font-semibold">VIEWS</p>
               </div>
               <div>
-                <p className="text-2xl md:text-5xl lg:text-7xl font-bold">40+</p>
+                <p className="text-2xl md:text-5xl lg:text-7xl font-bold">
+                  {totalCommits||"280"}
+                </p>
                 <p className="text-sm md:text-lg font-semibold">COMMITS</p>
               </div>
             </div>
           </div>
 
           <div></div>
-       
         </div>
       </div>
     </section>

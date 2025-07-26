@@ -24,6 +24,7 @@ const Chat = () => {
   const bottomRef = useRef();
 
   const user = useSelector((state) => state.user);
+  const ipAddress = useSelector((state) => state.ipAddress.ipAddress);
   const userId = user.id;
 
   const isAdmin = user.email === import.meta.env.VITE_ADMIN_GMAIL;
@@ -270,7 +271,7 @@ const Chat = () => {
       user_id: userId,
       content: contentToSend,
       file_url: file || null,
-      ipAddress: "N/A",
+      ipAddress:  ipAddress||"N/A",
       response_to: selectedReply?.id || null,
     });
 

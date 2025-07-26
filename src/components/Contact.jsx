@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { login, logout } from "../redux/slices/authSlice";
 import { setUser, clearUser } from "../redux/slices/userSlice";
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import Chat from "../utils/Chat.jsx";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
@@ -12,8 +12,7 @@ import socket from "../socket.js";
 function Contact() {
   const auth = useSelector((state) => state.auth);
   const user = useSelector((state) => state.user);
-  const admin = import.meta.env.VITE_ADMIN_GMAIL;
-  // const isAdmin = user.email === admin;
+
   const isAuthenticated = auth.isAuthenticated;
   const jwt = auth.jwt;
   const dispatch = useDispatch();
@@ -33,6 +32,8 @@ function Contact() {
       "width=500,height=600"
     );
   };
+
+  
 
   useEffect(() => {
     const receiveMessage = async (event) => {
@@ -66,6 +67,7 @@ function Contact() {
           if (res.status === 200) {
             const userObj = res.data.user[0];
 
+            
             dispatch(setUser(userObj));
           } else {
             console.error("Failed to fetch user data:", res);
