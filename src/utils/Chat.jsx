@@ -32,35 +32,134 @@ const Chat = () => {
   const [receiver_id, setReceiver_id] = useState(isAdmin ? 2 : adminId);
 
   // Connect socket
+  // useEffect(() => {
+  //   if (!socket.connected) {
+  //     socket.connect();
+
+  //     socket.on("connect", () => {
+
+  //       socket.emit("user_connected", userId, receiver_id);
+  //     });
+  //   } else {
+  //     socket.emit("user_connected", userId);
+  //   }
+
+  //   const handleReceiveMessage = (msg) => {
+
+  //     if (isAdmin && msg.user_id !== receiver_id) {
+
+  //       setUnreadCounts((prev) => ({
+  //         ...prev,
+  //         [msg.user_id]: (prev[msg.user_id] || 0) + 1,
+  //       }));
+  //     } else {
+  //       console.log("Received message for current user:", msg);
+  //       setMessages((prev) => [...prev, msg]);
+  //     }
+  //   };
+
+  //   const handleMessageSent = (msg) => {
+
+  //     setMessages((prev) => [...prev, msg]);
+  //   };
+
+  //   const handleMessageDeleted = ({ message_id }) => {
+  //     setMessages((prev) => prev.filter((msg) => msg.id !== message_id));
+  //   };
+
+  //   const handleMessageEdited = (updatedMsg) => {
+  //     setMessages((prev) =>
+  //       prev.map((msg) => (msg.id === updatedMsg.id ? updatedMsg : msg))
+  //     );
+  //   };
+
+  //   const handleMessageReadAck = (msg) => {
+
+  //     setMessages((prev) =>
+  //       prev.map((m) => {
+  //         console.log("Updating message status for:", m.id, "to", msg.status);
+  //         return m.id === msg.id ? { ...m, status: "read" } : m;
+  //       })
+  //     );
+  //     console.log("Updated message status:", msg.status);
+  //     if (msg.user_id === userId) {
+  //       setUnreadCounts((prev) => ({
+  //         ...prev,
+  //         [msg.receiver_id]: 0,
+  //       }));
+  //     }
+  //   };
+
+  //   socket.on("online_users", (userList) => {
+  //     setIsOnline(userList.includes(adminId));
+
+  //     if (isAdmin) {
+  //       socket.emit("get_all_users", (usersOrError) => {
+  //         if (usersOrError?.error) {
+  //           console.error("Error fetching users:", usersOrError.error);
+
+  //           return;
+  //         }
+
+  //         const filteredUsers = usersOrError.filter((user) => {
+  //           setUnreadCounts((prev) => ({
+  //             ...prev,
+  //             [user.id]: user.unread_count || 0,
+  //           }));
+  //           return user.id != adminId;
+  //         });
+  //         setUsers(filteredUsers);
+  //       });
+  //     }
+  //   });
+  //   // Add listeners
+  //   socket.on("receive_message", handleReceiveMessage);
+  //   socket.on("message_sent", handleMessageSent);
+  //   socket.on("message_deleted", handleMessageDeleted);
+  //   socket.on("message_edited", handleMessageEdited);
+  //   socket.on("message_read_ack", handleMessageReadAck);
+
+  //   // Cleanup
+  //   return () => {
+  //     socket.off("receive_message", handleReceiveMessage);
+  //     socket.off("message_sent", handleMessageSent);
+  //     socket.off("message_deleted", handleMessageDeleted);
+  //     socket.off("message_edited", handleMessageEdited);
+  //     socket.emit("user_disconnected", userId);
+  //     socket.off("message_read_ack", handleMessageReadAck);
+  //     socket.disconnect();
+  //   };
+  // }, [user, userId, adminId, receiver_id, isAdmin, messages]);
+
   useEffect(() => {
     if (!socket.connected) {
       socket.connect();
-
       socket.on("connect", () => {
-        // console.log("Connected with socket ID:", socket.id);
         socket.emit("user_connected", userId, receiver_id);
       });
     } else {
       socket.emit("user_connected", userId);
     }
 
+    return () => {
+      socket.emit("user_disconnected", userId);
+      socket.disconnect();
+    };
+  }, [userId, receiver_id]);
+
+  useEffect(() => {
     const handleReceiveMessage = (msg) => {
-      // console.log("Received message", msg);
       if (isAdmin && msg.user_id !== receiver_id) {
-        // Message is for another user — increase their unread count
         setUnreadCounts((prev) => ({
           ...prev,
           [msg.user_id]: (prev[msg.user_id] || 0) + 1,
         }));
       } else {
-        console.log("Received message for current user:", msg);
         setMessages((prev) => [...prev, msg]);
       }
     };
 
     const handleMessageSent = (msg) => {
-      console.log("Confirmed message from server:", msg);
-
       setMessages((prev) => [...prev, msg]);
     };
 
@@ -75,16 +174,9 @@ const Chat = () => {
     };
 
     const handleMessageReadAck = (msg) => {
-      console.log("Message read ack received:", msg);
-      console.log("Updating message status for:", msg.id, "to", msg.status);
-      console.log("Current messages:", messages);
       setMessages((prev) =>
-        prev.map((m) => {
-          console.log("Updating message status for:", m.id, "to", msg.status);
-          return m.id === msg.id ? { ...m, status: "read" } : m;
-        })
+        prev.map((m) => (m.id === msg.id ? { ...m, status: "read" } : m))
       );
-      console.log("Updated message status:", msg.status);
       if (msg.user_id === userId) {
         setUnreadCounts((prev) => ({
           ...prev,
@@ -93,6 +185,22 @@ const Chat = () => {
       }
     };
 
+    socket.on("receive_message", handleReceiveMessage);
+    socket.on("message_sent", handleMessageSent);
+    socket.on("message_deleted", handleMessageDeleted);
+    socket.on("message_edited", handleMessageEdited);
+    socket.on("message_read_ack", handleMessageReadAck);
+
+    return () => {
+      socket.off("receive_message", handleReceiveMessage);
+      socket.off("message_sent", handleMessageSent);
+      socket.off("message_deleted", handleMessageDeleted);
+      socket.off("message_edited", handleMessageEdited);
+      socket.off("message_read_ack", handleMessageReadAck);
+    };
+  }, [userId, receiver_id, isAdmin]);
+
+  useEffect(() => {
     socket.on("online_users", (userList) => {
       setIsOnline(userList.includes(adminId));
 
@@ -100,36 +208,26 @@ const Chat = () => {
         socket.emit("get_all_users", (usersOrError) => {
           if (usersOrError?.error) {
             console.error("Error fetching users:", usersOrError.error);
-
             return;
           }
 
           const filteredUsers = usersOrError.filter((user) => {
-            // console.log("User ID:", user.id, "Admin ID:", adminId);
-            return user.id != adminId;
+            setUnreadCounts((prev) => ({
+              ...prev,
+              [user.id]: user.unread_count || 0,
+            }));
+            return user.id !== adminId;
           });
+
           setUsers(filteredUsers);
         });
       }
     });
-    // Add listeners
-    socket.on("receive_message", handleReceiveMessage);
-    socket.on("message_sent", handleMessageSent);
-    socket.on("message_deleted", handleMessageDeleted);
-    socket.on("message_edited", handleMessageEdited);
-    socket.on("message_read_ack", handleMessageReadAck);
 
-    // Cleanup
     return () => {
-      socket.off("receive_message", handleReceiveMessage);
-      socket.off("message_sent", handleMessageSent);
-      socket.off("message_deleted", handleMessageDeleted);
-      socket.off("message_edited", handleMessageEdited);
-      socket.emit("user_disconnected", userId);
-      socket.off("message_read_ack", handleMessageReadAck);
-      socket.disconnect();
+      socket.off("online_users");
     };
-  }, [user, userId, adminId, receiver_id, isAdmin, messages]);
+  }, [isAdmin, adminId]);
 
   useEffect(() => {
     if (!receiver_id || !userId) return;
@@ -221,24 +319,24 @@ const Chat = () => {
   };
 
   async function updateMessage() {
-  if (!selectedUpdate || (!input && !file)) return;
+    if (!selectedUpdate || (!input && !file)) return;
 
-  socket.emit("edit_message", {
-    message_id: selectedUpdate.id,
-    new_content: input || null,
-    new_file_url: file || null,
-  });
+    socket.emit("edit_message", {
+      message_id: selectedUpdate.id,
+      new_content: input || null,
+      new_file_url: file || null,
+    });
 
-  setSelectedUpdate(null);
-  setInput("");
-  setFile(null);
-}
+    setSelectedUpdate(null);
+    setInput("");
+    setFile(null);
+  }
 
   useEffect(() => {
-  if (selectedUpdate) {
-    setInput(selectedUpdate.content);
-  }
-}, [selectedUpdate]);
+    if (selectedUpdate) {
+      setInput(selectedUpdate.content);
+    }
+  }, [selectedUpdate]);
 
   return (
     <div
@@ -339,7 +437,8 @@ const Chat = () => {
         {/* Input */}
         <div className="w-full">
           {/* Image/File Preview Before Sending */}
-          {((!isUploading && selectedUpdate?.file_url)||(!isUploading && file)) && (
+          {((!isUploading && selectedUpdate?.file_url) ||
+            (!isUploading && file)) && (
             <div className="relative bg-black/20 p-3 rounded-lg mb-3 text-sm text-white border border-gray-600">
               {/* Close Button */}
               <button
@@ -347,17 +446,19 @@ const Chat = () => {
                 className="absolute top-2 right-2 text-gray-400 hover:text-white transition"
                 aria-label="Remove File"
               >
-                <X className="w-4 h-4" onClick={()=>{
-                  setFile(null);
-                  setSelectedUpdate(null);
-                  setInput("");
-                }}/>
+                <X
+                  className="w-4 h-4"
+                  onClick={() => {
+                    setFile(null);
+                    setSelectedUpdate(null);
+                    setInput("");
+                  }}
+                />
               </button>
-             
 
               <div className="flex items-start gap-3">
                 <img
-                  src={selectedUpdate ? selectedUpdate.file_url :file}
+                  src={selectedUpdate ? selectedUpdate.file_url : file}
                   alt="preview"
                   className="max-w-[120px] max-h-[120px] object-contain rounded-md border border-gray-500"
                 />
@@ -366,18 +467,17 @@ const Chat = () => {
                     📎 Image ready to send:
                   </p>
                   <a
-                    href={selectedUpdate ? selectedUpdate.file_url :file}
+                    href={selectedUpdate ? selectedUpdate.file_url : file}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-400 underline break-all text-[0.8rem] sm:text-xs"
                   >
-                    {selectedUpdate ? selectedUpdate.file_url :file}
+                    {selectedUpdate ? selectedUpdate.file_url : file}
                   </a>
                 </div>
               </div>
             </div>
           )}
-
 
           {selectedReply && (
             <div className="relative bg-black/30 border border-gray-700 text-white rounded-lg p-3 mb-3 shadow-sm backdrop-blur-md">
