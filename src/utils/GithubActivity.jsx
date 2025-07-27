@@ -1,16 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import CalendarHeatmap from "react-calendar-heatmap";
 import "react-calendar-heatmap/dist/styles.css";
 import { Tooltip as ReactTooltip } from "react-tooltip";
-import { Activity, CalendarDays, Flame, Clock } from "lucide-react"; // Assuming you’re using lucide icons
+import { Activity, CalendarDays, Flame, Clock } from "lucide-react"; 
+import { useInView } from "framer-motion";
 
 const token = import.meta.env.VITE_GITHUB_TOKEN;
 const username = import.meta.env.VITE_GITHUB_USER;
 
 function StatCard({ icon, title, value }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
   return (
-    <div className="backdrop-blur-sm p-4 sm:p-3 px-3 sm:px-4 rounded-xl shadow-md border border-white/10 flex items-center gap-3 sm:gap-4 relative min-h-[80px] sm:min-h-[100px] w-full max-w-sm">
-     
+    <div
+      ref={ref}
+      className={`backdrop-blur-sm p-4 sm:p-3 px-3 sm:px-4 rounded-xl shadow-md border border-white/10 flex items-center gap-3 sm:gap-4 relative min-h-[80px] sm:min-h-[100px] w-full max-w-sm transition-all duration-700 ease-out
+        ${isInView ? "opacity-100 scale-100" : "opacity-0 scale-75"}
+      `}
+    >
       <div className="w-full text-center">
         <h3 className="text-white font-semibold text-[0.6rem] sm:text-sm absolute top-2 left-2">
           {title}
@@ -19,7 +27,7 @@ function StatCard({ icon, title, value }) {
           {value}
         </p>
       </div>
-       <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-white text-xl sm:text-2xl">
+      <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-white text-xl sm:text-2xl">
         {icon}
       </div>
     </div>
@@ -29,6 +37,22 @@ function StatCard({ icon, title, value }) {
 function GithubActivity() {
   const [contributions, setContributions] = useState([]);
   const [weeks, setWeeks] = useState([]);
+
+   const heatmapRef = useRef(null);
+  const isInView = useInView(heatmapRef, { once: true });
+
+  useEffect(() => {
+    if (isInView) {
+      const cells = heatmapRef.current?.querySelectorAll("rect");
+      if (cells) {
+        cells.forEach((cell) => {
+          const delay = Math.random() * 1.5; 
+          cell.classList.add("random-heatmap-appear");
+          cell.style.animationDelay = `${delay}s`;
+        });
+      }
+    }
+  }, [isInView]);
 
   useEffect(() => {
     const fetchContributions = async () => {
@@ -102,6 +126,7 @@ function GithubActivity() {
 
   return (
     <div className="w-full overflow-x-auto">
+      <div ref={heatmapRef}>
       <CalendarHeatmap
         startDate={new Date(new Date().getFullYear(), 0, 1)}
         endDate={new Date()}
@@ -121,6 +146,8 @@ function GithubActivity() {
       />
       <ReactTooltip id="github-heatmap" />
 
+    </div>
+      
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 my-2 sm:my-6">
         <StatCard

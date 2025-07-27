@@ -4,6 +4,8 @@ import { useState, useRef } from "react";
 import InstagramStoryCard from "../utils/InstagramStoryCard";
 import InstagramModal from "../utils/InstagramModal";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { motion, useInView } from "framer-motion";
+import AnimatedTextLine from "../utils/AnimatedText";
 
 function About() {
   const scrollContainerRef = useRef(null);
@@ -35,7 +37,6 @@ function About() {
         const response = await axios.get(url);
         const data = response.data.data;
         setStories(data);
-        console.log("Stories:", data);
         if (data.length < 6) {
           setIsAtEnd(true);
         }
@@ -66,28 +67,34 @@ function About() {
     setCurrentIndex(index);
     setModalOpen(true);
   };
-
+  const aboutRef = useRef(null);
+  const isInView = useInView(aboutRef, { once: true, margin: "-100px" });
 
   return (
-    <section className=" md:p-5 next-section about section" id="about">
-      {/* Main Content */}
-      <div className=" flex flex-col justify-around text-center]">
+    <section className="md:p-5 next-section about section" id="about">
+      <motion.div
+        ref={aboutRef}
+        initial={{ opacity: 0, y: 50 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+        className="flex flex-col justify-around text-center min-h-[60vh]"
+      >
         <div className="flex flex-col items-start justify-center ">
           <h1 className="section-heading">ABOUT ME</h1>
-          <p className="text-left text-xs sm:text-sm md:text-base lg:text-xl mt-2 md:mt-4 text-gray-300 w-full">
-            I’m a final-year B.Tech student specializing in Artificial
+          <AnimatedTextLine
+            text="I’m a final-year B.Tech student specializing in Artificial
             Intelligence and Machine Learning, with a strong passion for
             full-stack web development and building futuristic user experiences.
             I enjoy creating responsive, scalable applications using
             technologies like React, Node.js, and MongoDB, while also exploring
             the real-world applications of AI in projects involving predictive
-            analytics and intelligent systems.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-4 lg:grid-cols-2 ">
-          <p className="col-span-4 sm:col-span-4 lg:col-span-1 text-left text-xs sm:text-sm md:text-base lg:text-xl mt-2 md:mt-4 text-gray-300 w-full">
-            Driven by curiosity and creativity, I approach challenges with a
+            analytics and intelligent systems."
+            startDelay={0}
+            className="text-left text-xs sm:text-sm md:text-base lg:text-xl mt-2 md:mt-4 text-gray-300 w-full"
+          />
+          <div className="grid grid-cols-4 lg:grid-cols-2 ">
+            <AnimatedTextLine
+              text="Driven by curiosity and creativity, I approach challenges with a
             solution-focused mindset and a deep interest in how technology can
             solve real problems. I’ve worked on projects like an AI-powered blog
             platform and an investment advisory tool that leverages data-driven
@@ -95,9 +102,12 @@ function About() {
             strength lies in developing end-to-end solutions — from building
             scalable full-stack web applications using technologies like React
             and Node.js, to designing, training, and deploying intelligent ML
-            models for real-world use cases.
-          </p>
-          <div className=""></div>
+            models for real-world use cases."
+              startDelay={650}
+              className="col-span-4 sm:col-span-4 lg:col-span-1 text-left text-xs sm:text-sm md:text-base lg:text-xl mt-2 md:mt-4 text-gray-300 w-full"
+            />
+            <div className=""></div>
+          </div>
         </div>
 
         <div className="relative  w-[56vw] overflow-hidden flex items-center justify-center mt-10">
@@ -106,41 +116,32 @@ function About() {
             ref={scrollContainerRef}
             onScroll={handleScroll}
           >
-            {stories.map((story,index) => (
-              <>
-                <li
-                  key={story.id}
-                  className="flex-shrink-0 w-[calc((50vw-2.5rem)/6)]"
-                  onClick={() => handleCardClick(index)}
-                >
-                  <InstagramStoryCard
-                    story={story}
-                    
-                  />
-                </li>
-                
-              </>
+            {stories.map((story, index) => (
+              <li
+                key={story.id}
+                className="flex-shrink-0 w-[calc((50vw-2.5rem)/6)]"
+                onClick={() => handleCardClick(index)}
+              >
+                <InstagramStoryCard story={story} />
+              </li>
             ))}
           </ul>
+
           <InstagramModal
-                  isOpen={isModalOpen}
-                  story={stories[currentIndex]}
-                  onClose={handleClose}
-                  onNext={handleNext}
-                  onPrev={handlePrev}
-                />
+            isOpen={isModalOpen}
+            story={stories[currentIndex]}
+            onClose={handleClose}
+            onNext={handleNext}
+            onPrev={handlePrev}
+          />
+
           {!isAtEnd && (
-            <div className="h-full w-10  flex items-center justify-end pr-2">
-              <span className="text-lg font-bold">
-                <ArrowForwardIosIcon
-                  fontSize="large"
-                  className="text-white t"
-                />
-              </span>
+            <div className="h-full w-10 flex items-center justify-end pr-2">
+              <ArrowForwardIosIcon fontSize="large" className="text-white" />
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

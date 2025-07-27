@@ -20,8 +20,14 @@ import engineer5 from "../assets/ProjectImages/Project3/page5.png";
 import engineer6 from "../assets/ProjectImages/Project3/page6.png";
 import engineer7 from "../assets/ProjectImages/Project3/page7.png";
 import engineer8 from "../assets/ProjectImages/Project3/page8.png";
+import { motion, useInView } from "framer-motion";
+import AnimatedTextLine from "../utils/AnimatedText";
+import { useState, useRef } from "react";
 
-const Project = () => {
+function Project() {
+  const aboutRef = useRef(null);
+  const isInView = useInView(aboutRef, { once: true, margin: "-100px" });
+
   const projects = [
     {
       title: "Skill2Salary",
@@ -126,37 +132,45 @@ const Project = () => {
 
   return (
     <section className="next-section  project section" id="project">
-      <div>
-        <h1 className="section-heading text-left">PROJECT</h1>
-      </div>
-      <ul id="project-list" className="flex flex-col gap-10">
-        {projects.map((project, index) => (
-          <ProjectCard
-            key={index}
-            title={project.title}
-            images={project.images}
-            description={project.description}
-            github={project.github}
-            link={project.link}
-            tags={project.tags}
-            index={index}
-          />
-        ))}
-      </ul>
+      <motion.div
+        ref={aboutRef}
+        initial={{ opacity: 0, y: 50 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+        className="flex flex-col justify-around  min-h-[60vh]"
+      >
+        <div>
+          <h1 className="section-heading text-left">PROJECT</h1>
+        </div>
+        <ul id="project-list" className="flex flex-col gap-10">
+          {projects.map((project, index) => (
+            <ProjectCard
+              key={index}
+              title={project.title}
+              images={project.images}
+              description={project.description}
+              github={project.github}
+              link={project.link}
+              tags={project.tags}
+              index={index}
+            />
+          ))}
+        </ul>
 
-      <div className="flex justify-center mt-5 md:mt-10 px-4">
-        <a
-          href="https://github.com/akash85246?tab=repositories"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:text-[#8b5cf6] hover:scale-105 transition-all duration-300 ease-in-out border border-white/10 backdrop-blur-sm text-xs sm:text-sm md:text-base lg:text-base"
-        >
-          More Projects on GitHub
-          <ArrowForwardIosIcon className="text-sm" />
-        </a>
-      </div>
+        <div className="flex justify-center mt-5 md:mt-10 px-4">
+          <a
+            href="https://github.com/akash85246?tab=repositories"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:text-[#8b5cf6] hover:scale-105 transition-all duration-300 ease-in-out border border-white/10 backdrop-blur-sm text-xs sm:text-sm md:text-base lg:text-base"
+          >
+            More Projects on GitHub
+            <ArrowForwardIosIcon className="text-sm" />
+          </a>
+        </div>
+      </motion.div>
     </section>
   );
-};
+}
 
 export default Project;

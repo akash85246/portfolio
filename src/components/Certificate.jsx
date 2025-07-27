@@ -26,8 +26,43 @@ import rpaImage from "../assets/Certificates/infosys/RoboticProcessAutomation.pn
 import runtymImage from "../assets/Certificates/infosys/RuntymSI.png";
 import timeManagementImage from "../assets/Certificates/infosys/timeManagement.png";
 
+import { motion, useInView } from "framer-motion";
+
+const fadeInPop = (delay) => ({
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delay,
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  },
+});
+
+const AnimatedImage = ({ src, className, delay }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "0px 0px -100px 0px" });
+
+  return (
+    <motion.img
+      ref={ref}
+      src={src}
+      variants={fadeInPop(delay)}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      className={className}
+    />
+  );
+};
+
+
+
 function Certificate() {
-   
+  const certificateRef = useRef(null);
+  const isInView = useInView(certificateRef, { once: true, margin: "-100px" });
+
   const [selectedId, setSelectedId] = useState(18);
   const scrollRef = useRef(null);
   const itemRefs = useRef([]);
@@ -59,85 +94,106 @@ function Certificate() {
     },
     { id: 17, src: rpaImage, title: "Robotic Process Automation Certificate" },
     { id: 18, src: runtymImage, title: "Runtym SI Certificate" },
-
   ];
-
-   
-   
-
-
-
 
   return (
     <section className="next-section certificate section" id="certificate">
-      <div>
-        <h1 className="section-heading text-left">CERTIFICATES</h1>
-      </div>
+      <motion.div
+        ref={certificateRef}
+        initial={{ opacity: 0, y: 50 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+        className="flex flex-col justify-around  min-h-[60vh]"
+      >
+        <div>
+          <h1 className="section-heading text-left">CERTIFICATES</h1>
+        </div>
 
-     <div className="flex flex-col gap-1 sm:gap-2 md:gap-5">
-  <div className="gap-1 sm:gap-2 md:gap-5 grid-cols-5 grid md:grid-cols-3">
-    <img
-      src={fullstack}
-      className="md:aspect-[3/2] col-span-3 md:col-span-2 w-full object-cover"
-    />
-    <div className="gap-1 sm:gap-2 md:gap-5 grid grid-cols-1 col-span-2 md:col-span-1">
-      <img src={sql} className="aspect-[3/2] w-full object-cover" />
-      <img src={ibm} className="aspect-[3/2] w-full object-cover" />
-    </div>
-  </div>
-
-  <div className="gap-1 sm:gap-2 md:gap-5 grid-cols-5 grid md:grid-cols-3">
-    <div className="gap-1 sm:gap-2 md:gap-5 grid grid-cols-1 col-span-2 md:col-span-1">
-      <img src={vihaan} className="aspect-[3/2] w-full object-cover" />
-      <img src={gdsc} className="aspect-[3/2] w-full object-cover" />
-    </div>
-    <img
-      src={pbel}
-      className="md:aspect-[3/2] col-span-3 md:col-span-2 w-full object-cover"
-    />
-  </div>
-</div>
-
-      <div>
-        <h1 className="pt-5 md:pt-10 text-xl sm:text-2xl md:text-3xl text-[#00bcd4] mb-2 orbitron text-left ">
-          MORE CERTIFICATES
-        </h1>
-
-      <div className="flex justify-evenly items-start gap-1 sm:gap-2 lg:gap-5">
-        {/* Selected certificate display */}
-  
-          <img
-            src={certificates[selectedId - 1]?.src}
-            alt="Selected Certificate"
-            className="max-h-[10rem] sm:max-h-[20rem] md:max-h-[24rem] lg:max-h-[35rem] xl:max-h-[45rem]  aspect-[3/2]  object-cover  border rounded-lg shadow-lg"
+        <div className="flex flex-col gap-1 sm:gap-2 md:gap-5">
+      {/* First Row */}
+      <div className="gap-1 sm:gap-2 md:gap-5 grid-cols-5 grid md:grid-cols-3">
+        <AnimatedImage
+          src={fullstack}
+          delay={0}
+          className="md:aspect-[3/2] col-span-3 md:col-span-2 w-full object-cover"
+        />
+        <div className="gap-1 sm:gap-2 md:gap-5 grid grid-cols-1 col-span-2 md:col-span-1">
+          <AnimatedImage
+            src={sql}
+            delay={1}
+            className="aspect-[3/2] w-full object-cover"
           />
-
-
-        {/* Vertical carousel */}
-        <div
-          className="max-h-[10rem] sm:max-h-[20rem] md:max-h-[24rem] lg:max-h-[35rem] xl:max-h-[45rem] w-64 overflow-y-scroll scroll-smooth snap-y snap-mandatory border rounded-lg"
-          ref={scrollRef}
-          
-        >
-          {certificates.map((cert, idx) => (
-            <div
-              key={cert.id}
-              className={`snap-center cursor-pointer transition-all duration-300 flex items-center justify-center m-2 ${
-                selectedId === cert.id ? "scale-110" : "scale-100 opacity-60"
-              }`}
-              onClick={() => setSelectedId(cert.id)}
-              ref={(el) => (itemRefs.current[idx] = el)}
-            >
-              <img
-                src={cert.src}
-                alt={cert.title}
-                className="w-40  aspect-auto md:w-50 md:h-38 lg:w-60 lg:h-48 object-cover"
-              />
-            </div>
-          ))}
+          <AnimatedImage
+            src={ibm}
+            delay={1}
+            className="aspect-[3/2] w-full object-cover"
+          />
         </div>
       </div>
+
+      {/* Second Row */}
+      <div className="gap-1 sm:gap-2 md:gap-5 grid-cols-5 grid md:grid-cols-3">
+        <div className="gap-1 sm:gap-2 md:gap-5 grid grid-cols-1 col-span-2 md:col-span-1">
+          <AnimatedImage
+            src={vihaan}
+            delay={1.6}
+            className="aspect-[3/2] w-full object-cover"
+          />
+          <AnimatedImage
+            src={gdsc}
+            delay={1.6}
+            className="aspect-[3/2] w-full object-cover"
+          />
+        </div>
+        <AnimatedImage
+          src={pbel}
+          delay={1.4}
+          className="md:aspect-[3/2] col-span-3 md:col-span-2 w-full object-cover"
+        />
       </div>
+    </div>
+
+        <div>
+          <h1 className="pt-5 md:pt-10 text-xl sm:text-2xl md:text-3xl text-[#00bcd4] mb-2 orbitron text-left ">
+            MORE CERTIFICATES
+          </h1>
+
+          <div className="flex justify-evenly items-start gap-1 sm:gap-2 lg:gap-5">
+            {/* Selected certificate display */}
+
+            <img
+              src={certificates[selectedId - 1]?.src}
+              alt="Selected Certificate"
+              className="max-h-[10rem] sm:max-h-[20rem] md:max-h-[24rem] lg:max-h-[35rem] xl:max-h-[45rem]  aspect-[3/2]  object-cover  border rounded-lg shadow-lg"
+            />
+
+            {/* Vertical carousel */}
+            <div
+              className="max-h-[10rem] sm:max-h-[20rem] md:max-h-[24rem] lg:max-h-[35rem] xl:max-h-[45rem] w-64 overflow-y-scroll scroll-smooth snap-y snap-mandatory border rounded-lg"
+              ref={scrollRef}
+            >
+              {certificates.map((cert, idx) => (
+                <div
+                  key={cert.id}
+                  className={`snap-center cursor-pointer transition-all duration-300 flex items-center justify-center m-2 ${
+                    selectedId === cert.id
+                      ? "scale-110"
+                      : "scale-100 opacity-60"
+                  }`}
+                  onClick={() => setSelectedId(cert.id)}
+                  ref={(el) => (itemRefs.current[idx] = el)}
+                >
+                  <img
+                    src={cert.src}
+                    alt={cert.title}
+                    className="w-40  aspect-auto md:w-50 md:h-38 lg:w-60 lg:h-48 object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </motion.div>
     </section>
   );
 }

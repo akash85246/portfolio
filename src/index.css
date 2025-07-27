@@ -114,3 +114,36 @@ body {
   font-size: 0.5rem;
   color: rgba(255, 255, 255, 0.6);
 }
+
+
+/* activity animation  */
+@keyframes fadePop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes fadeLeetPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.random-heatmap-appear {
+  opacity: 0;
+  animation: fadePop 0.5s ease-out forwards;
+}
+
+.random-heatmap-leet-appear {
+  opacity: 0;
+  animation: fadeLeetPop 0.5s ease-out forwards;
+}

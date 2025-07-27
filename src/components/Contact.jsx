@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { login, logout } from "../redux/slices/authSlice";
 import { setUser, clearUser } from "../redux/slices/userSlice";
-import React, { useEffect } from "react";
+import React, {  useRef, useState, useEffect } from "react";
 import Chat from "../utils/Chat.jsx";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
@@ -9,9 +9,13 @@ import EmailIcon from "@mui/icons-material/Email";
 import axios from "axios";
 import socket from "../socket.js";
 
+import { motion, useInView } from "framer-motion";
+
 function Contact() {
   const auth = useSelector((state) => state.auth);
   const user = useSelector((state) => state.user);
+   const contactRef = useRef(null);
+      const isInView = useInView(contactRef, { once: true, margin: "-100px" });
 
   const isAuthenticated = auth.isAuthenticated;
   const jwt = auth.jwt;
@@ -96,6 +100,13 @@ function Contact() {
 
   return (
     <section className="next-section contact section" id="contact">
+     <motion.div
+                ref={contactRef}
+                initial={{ opacity: 0, y: 50 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                className="flex flex-col justify-around  min-h-[60vh]"
+              >
       <h1 className="section-heading">GET IN TOUCH</h1>
       <div className="grid grid-cols-6   md:grid-cols-3 items-center justify-center mt-4 md:mt-8 gap-6">
         {isAuthenticated ? (
@@ -151,6 +162,7 @@ function Contact() {
         )}
         <div></div>
       </div>
+      </motion.div>
     </section>
   );
 }

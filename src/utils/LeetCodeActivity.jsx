@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useInView } from "framer-motion";
 import axios from "axios";
 import CalendarHeatmap from "react-calendar-heatmap";
 import { Tooltip } from "react-tooltip";
@@ -7,8 +8,20 @@ import "react-tooltip/dist/react-tooltip.css";
 import { Sparkles, Zap, Flame, Circle } from "lucide-react";
 
 function StatCard({ icon, title, value }) {
+  const ref = useRef(null);
+  const isInViewLeet = useInView(ref, { once: true, margin: "-50px" });
+
   return (
-    <div className="backdrop-blur-sm p-2 md:p-5 lg:p-6 rounded-xl shadow-md border border-white/10 flex items-center justify-center gap-1 sm:gap-3 md:gap-4 relative min-h-[80px] md:min-h-[100px] w-full max-w-sm ">
+    <div
+      ref={ref}
+      className={`backdrop-blur-sm p-2 md:p-5 lg:p-6 rounded-xl shadow-md border border-white/10 flex items-center justify-center gap-1 sm:gap-3 md:gap-4 relative min-h-[80px] md:min-h-[100px] w-full max-w-sm transition-all duration-700 ease-out
+        ${
+          isInViewLeet
+            ? "opacity-100 translate-y-0 scale-100"
+            : "opacity-0 translate-y-10 scale-90"
+        }
+      `}
+    >
       <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center mt-5 text-white text-xl md:text-2xl">
         {icon}
       </div>
@@ -28,6 +41,22 @@ function LeetCodeActivity() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  const heatmapLeetRef = useRef(null);
+  const isInViewLeet = useInView(heatmapLeetRef, { once: true });
+
+  useEffect(() => {
+    if (isInViewLeet) {
+      const cells = heatmapLeetRef.current?.querySelectorAll("rect");
+      if (cells) {
+        cells.forEach((cell) => {
+          const delay = Math.random() * 700;
+          cell.classList.add("random-heatmap-leet-appear");
+          cell.style.animationDelay = `${delay}s`;
+        });
+      }
+    }
+  }, [isInViewLeet]);
 
   useEffect(() => {
     const fetchLeetCodeData = async () => {
@@ -71,32 +100,39 @@ function LeetCodeActivity() {
     }
   };
 
+  const getClassForValue = (value) => {
+    if (!value) return "color-empty";
+    const intensity = value.contributionCount;
+    if (intensity === 0) return "color-empty";
+    if (intensity > 20) return "color-scale-4";
+    if (intensity > 10) return "color-scale-3";
+    if (intensity > 0) return "color-scale-2";
+    return "color-scale-1";
+  };
+
   return (
     <div className="w-full overflow-x-auto">
       <div className="mt-0">
         <div className="relative">
-          <CalendarHeatmap
-            startDate={new Date(new Date().getFullYear(), 0, 1)}
-            endDate={new Date()}
-            gutterSize={3}
-            values={calendar}
-            classForValue={(value) => {
-              if (!value || value.count === 0) return "color-empty";
-              if (value.count > 10) return "color-scale-4";
-              if (value.count > 5) return "color-scale-3";
-              if (value.count > 2) return "color-scale-2";
-              return "color-scale-1";
-            }}
-            tooltipDataAttrs={(value) => ({
-              "data-tooltip-id": "leetcode-tooltip",
-              "data-tooltip-content": `${value?.date?.toDateString() || ""}: ${
-                value?.count || 0
-              } submissions`,
-            })}
-            showWeekdayLabels={false} // Hide Mon–Sun
-            showMonthLabels={false} // Hide Jan–Dec
-          />
-          <Tooltip id="leetcode-tooltip" />
+          <div ref={heatmapLeetRef}>
+            <CalendarHeatmap
+              startDate={new Date(new Date().getFullYear(), 0, 1)}
+              endDate={new Date()}
+              gutterSize={3}
+              values={calendar}
+              classForValue={getClassForValue}
+              tooltipDataAttrs={(value) => ({
+                "data-tooltip-id": "leetcode-tooltip",
+                "data-tooltip-content": `${
+                  value?.date?.toDateString() || ""
+                }: ${value?.count || 0} submissions`,
+              })}
+              showWeekdayLabels={false}
+              showMonthLabels={false}
+              horizontal
+            />
+            <Tooltip id="leetcode-tooltip" />
+          </div>
         </div>
       </div>
 

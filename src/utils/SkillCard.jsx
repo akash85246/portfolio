@@ -3,16 +3,15 @@ import { Canvas, useLoader, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
+import { motion, useInView } from "framer-motion";
 
 function normalizeModelSize(model, targetSize = 1) {
   const box = new THREE.Box3().setFromObject(model);
   const size = new THREE.Vector3();
   box.getSize(size);
-
   const center = new THREE.Vector3();
   box.getCenter(center);
   model.position.sub(center);
-
   const maxAxis = Math.max(size.x, size.y, size.z);
   const scaleFactor = (targetSize * 1.5) / maxAxis;
   model.scale.setScalar(scaleFactor);
@@ -28,7 +27,6 @@ function Model({ url, type, fallbackColor, isHovered, shouldResetRotation }) {
   useEffect(() => {
     if (ref.current) {
       normalizeModelSize(ref.current);
-
       const box = new THREE.Box3().setFromObject(ref.current);
       const size = new THREE.Vector3();
       box.getSize(size);
@@ -58,7 +56,6 @@ function Model({ url, type, fallbackColor, isHovered, shouldResetRotation }) {
       if (isHovered) {
         ref.current.rotation.y += 0.1;
       } else if (shouldResetRotation) {
-        // Smooth reset
         ref.current.rotation.y += (0 - ref.current.rotation.y) * 0.1;
       }
     }
@@ -70,6 +67,9 @@ function Model({ url, type, fallbackColor, isHovered, shouldResetRotation }) {
 export default function SkillCard({ icon, name, color = "#cccccc", type }) {
   const [isHovered, setIsHovered] = useState(false);
   const [shouldResetRotation, setShouldResetRotation] = useState(false);
+
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "0px 0px -50px 0px" });
 
   let content;
   switch (type) {
@@ -144,19 +144,26 @@ export default function SkillCard({ icon, name, color = "#cccccc", type }) {
   }
 
   return (
-    <div
-  className="backdrop-blur-sm rounded-xl p-4 shadow-md flex flex-col items-center justify-center hover:shadow-lg transition border hover-fade-up w-25 sm:w-35 md:w-56 lg:w-52 xl:w-62"
-  style={{ borderColor: color }}
->
-  <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36 mb-3 overflow-hidden">
-    {content}
-  </div>
-  <p
-    className="text-center text-xs sm:text-sm mg:text-base lg:text-xl font-medium"
-    style={{ color: color }}
-  >
-    {name}
-  </p>
-</div>
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 40, scale: 0.8 }}
+      animate={
+        isInView
+          ? { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: "easeOut" } }
+          : {}
+      }
+      className="backdrop-blur-sm rounded-xl p-4 shadow-md flex flex-col items-center justify-center hover:shadow-lg transition border hover-fade-up w-25 sm:w-35 md:w-56 lg:w-52 xl:w-62"
+      style={{ borderColor: color }}
+    >
+      <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36 mb-3 overflow-hidden">
+        {content}
+      </div>
+      <p
+        className="text-center text-xs sm:text-sm mg:text-base lg:text-xl font-medium"
+        style={{ color: color }}
+      >
+        {name}
+      </p>
+    </motion.div>
   );
 }
