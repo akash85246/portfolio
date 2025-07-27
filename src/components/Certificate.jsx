@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import sql from "../assets/Certificates/SQLcertificate.png";
+import sql from "../assets/Certificates/sqlCertificate.png";
 import fullstack from "../assets/Certificates/fullstack.png";
 import vihaan from "../assets/Certificates/vihaan.png";
 import pbel from "../assets/Certificates/PBEL.png";
