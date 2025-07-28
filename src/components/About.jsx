@@ -5,7 +5,6 @@ import InstagramStoryCard from "../utils/InstagramStoryCard";
 import InstagramModal from "../utils/InstagramModal";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { motion, useInView } from "framer-motion";
-import AnimatedTextLine from "../utils/AnimatedText";
 
 function About() {
   const scrollContainerRef = useRef(null);
@@ -81,31 +80,29 @@ function About() {
       >
         <div className="flex flex-col items-start justify-center ">
           <h1 className="section-heading">ABOUT ME</h1>
-          <AnimatedTextLine
-            text="I’m a final-year B.Tech student specializing in Artificial
+          <p className="text-left text-xs sm:text-sm md:text-base lg:text-xl mt-2 md:mt-4 text-gray-300 w-full">
+            I’m a final-year B.Tech student specializing in Artificial
             Intelligence and Machine Learning, with a strong passion for
             full-stack web development and building futuristic user experiences.
             I enjoy creating responsive, scalable applications using
             technologies like React, Node.js, and MongoDB, while also exploring
             the real-world applications of AI in projects involving predictive
-            analytics and intelligent systems."
-            startDelay={0}
-            className="text-left text-xs sm:text-sm md:text-base lg:text-xl mt-2 md:mt-4 text-gray-300 w-full"
-          />
+            analytics and intelligent systems.
+          </p>
+
           <div className="grid grid-cols-4 lg:grid-cols-2 ">
-            <AnimatedTextLine
-              text="Driven by curiosity and creativity, I approach challenges with a
-            solution-focused mindset and a deep interest in how technology can
-            solve real problems. I’ve worked on projects like an AI-powered blog
-            platform and an investment advisory tool that leverages data-driven
-            machine learning models to guide financial decisions. My core
-            strength lies in developing end-to-end solutions — from building
-            scalable full-stack web applications using technologies like React
-            and Node.js, to designing, training, and deploying intelligent ML
-            models for real-world use cases."
-              startDelay={650}
-              className="col-span-4 sm:col-span-4 lg:col-span-1 text-left text-xs sm:text-sm md:text-base lg:text-xl mt-2 md:mt-4 text-gray-300 w-full"
-            />
+            <p className="col-span-4 sm:col-span-4 lg:col-span-1 text-left text-xs sm:text-sm md:text-base lg:text-xl mt-2 md:mt-4 text-gray-300 w-full">
+              Driven by curiosity and creativity, I approach challenges with a
+              solution-focused mindset and a deep interest in how technology can
+              solve real problems. I’ve worked on projects like an AI-powered
+              blog platform and an investment advisory tool that leverages
+              data-driven machine learning models to guide financial decisions.
+              My core strength lies in developing end-to-end solutions — from
+              building scalable full-stack web applications using technologies
+              like React and Node.js, to designing, training, and deploying
+              intelligent ML models for real-world use cases.
+            </p>
+
             <div className=""></div>
           </div>
         </div>
