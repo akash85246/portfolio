@@ -2,13 +2,13 @@ import SkillCard from "../utils/SkillCard";
 import SkillSvgCard from "../utils/skillSvgCard";
 import c from "../assets/SkillImages/c.glb";
 import cpp from "../assets/SkillImages/cpp.glb";
-import css from "../assets/SkillImages/css2.glb";
+import css from "../assets/SkillImages/css.fbx";
 import ejs from "../assets/SkillImages/ejs.svg";
 import express from "../assets/SkillImages/expressjs.svg";
 import git from "../assets/SkillImages/git.glb";
-import github from "../assets/SkillImages/github2.glb";
+import github from "../assets/SkillImages/github.fbx";
 import googleAIStudio from "../assets/SkillImages/googleAIStudio.svg";
-import html from "../assets/SkillImages/html2.glb";
+import html from "../assets/SkillImages/html.fbx";
 import javascript from "../assets/SkillImages/javascript.glb";
 import jquery from "../assets/SkillImages/jquery.fbx";
 import matplotlib from "../assets/SkillImages/matplotlib.svg";
@@ -19,7 +19,7 @@ import nodejs from "../assets/SkillImages/node.glb";
 import numpy from "../assets/SkillImages/np.fbx";
 import pandas from "../assets/SkillImages/pd.svg";
 import pg from "../assets/SkillImages/pg.fbx";
-import python from "../assets/SkillImages/python.glb";
+import python from "../assets/SkillImages/py.glb";
 import react from "../assets/SkillImages/react.glb";
 
 import seaborn from "../assets/SkillImages/sns.svg";
@@ -35,8 +35,8 @@ function Skill() {
     // 🟢 Languages
     { icon: c, color: "#A8B9CC", name: "C", type: "glb" },
     { icon: cpp, color: "#00599C", name: "C++", type: "glb" },
-    { icon: html, color: "#E44D26", name: "HTML", type: "glb" },
-    { icon: css, color: "#264DE4", name: "CSS", type: "glb" },
+    { icon: html, color: "#E44D26", name: "HTML", type: "fbx" },
+    { icon: css, color: "#264DE4", name: "CSS", type: "fbx" },
     { icon: javascript, color: "#F7DF1E", name: "JavaScript", type: "glb" },
     { icon: python, color: "#3776AB", name: "Python", type: "glb" },
     { icon: ml, color: "#0769AD", name: "Machine Learning", type: "svg" },
@@ -61,7 +61,7 @@ function Skill() {
     // 🟡 Others
     { icon: nodejs, color: "#339933", name: "Node.js", type: "glb" },
     { icon: git, color: "#F05032", name: "Git", type: "glb" },
-    { icon: github, color: "#FFD6A4", name: "GitHub", type: "glb" },
+    { icon: github, color: "#FFD6A4", name: "GitHub", type: "fbx" },
     {
       icon: googleAIStudio,
       color: "#4285F4",

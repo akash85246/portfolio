@@ -29,23 +29,7 @@ function Model({ url, type, fallbackColor, isHovered, shouldResetRotation }) {
     if (ref.current) {
       normalizeModel(ref.current);
 
-      // model-specific fixes (based on model.name)
-      if (["HTML", "CSS", "GitHub"].includes(model.name)) {
-        switch (model.name) {
-          case "HTML":
-            ref.current.position.y -= 0.2;
-            ref.current.scale.multiplyScalar(1.1);
-            break;
-          case "CSS":
-            ref.current.position.y -= 0.15;
-            ref.current.scale.multiplyScalar(1.15);
-            break;
-          case "GitHub":
-            ref.current.position.y -= 0.3;
-            ref.current.scale.multiplyScalar(1.2);
-            break;
-        }
-      }
+     
 
       // Adjust camera distance dynamically
       const box = new THREE.Box3().setFromObject(ref.current);
