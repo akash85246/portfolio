@@ -26,20 +26,42 @@ function Model({ url, type, fallbackColor, isHovered, shouldResetRotation }) {
   const { camera } = useThree();
 
   useEffect(() => {
-    const obj = ref.current;
-    if (!obj) return;
+    if (ref.current) {
+      normalizeModel(ref.current);
 
-    normalizeModel(obj);
+      // model-specific fixes (based on model.name)
+      if (["HTML", "CSS", "GitHub"].includes(model.name)) {
+        switch (model.name) {
+          case "HTML":
+            ref.current.position.y -= 0.2;
+            ref.current.scale.multiplyScalar(1.1);
+            break;
+          case "CSS":
+            ref.current.position.y -= 0.15;
+            ref.current.scale.multiplyScalar(1.15);
+            break;
+          case "GitHub":
+            ref.current.position.y -= 0.3;
+            ref.current.scale.multiplyScalar(1.2);
+            break;
+        }
+      }
 
-    const box = new THREE.Box3().setFromObject(obj);
-    const sphere = box.getBoundingSphere(new THREE.Sphere());
-    camera.position.set(0, 0, sphere.radius * 3);
-    camera.lookAt(0, 0, 0);
+      // Adjust camera distance dynamically
+      const box = new THREE.Box3().setFromObject(ref.current);
+      const size = new THREE.Vector3();
+      box.getSize(size);
+      const maxDim = Math.max(size.x, size.y, size.z);
+      camera.position.set(0, 0, maxDim * 2);
+      camera.lookAt(0, 0, 0);
+    }
 
+    // Traverse model to enable shadows and apply fallback material
     model.traverse((child) => {
       if (child.isMesh) {
         child.castShadow = true;
         child.receiveShadow = true;
+
         if (type === "fbx") {
           child.material = new THREE.MeshStandardMaterial({
             color: new THREE.Color(fallbackColor),
@@ -50,6 +72,8 @@ function Model({ url, type, fallbackColor, isHovered, shouldResetRotation }) {
       }
     });
   }, [model, camera, fallbackColor, type]);
+
+
   useFrame(() => {
     if (ref.current) {
       if (isHovered) {
