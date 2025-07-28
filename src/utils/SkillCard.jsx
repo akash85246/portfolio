@@ -26,14 +26,15 @@ function Model({ url, type, fallbackColor, isHovered, shouldResetRotation }) {
   const { camera } = useThree();
 
   useEffect(() => {
-    if (ref.current) {
-      normalizeModel(ref.current);
+    const obj = ref.current;
+    if (!obj) return;
 
-      const box = new THREE.Box3().setFromObject(ref.current);
-      const sphere = box.getBoundingSphere(new THREE.Sphere());
-      camera.position.set(0, 0, sphere.radius * 3);
-      camera.lookAt(0, 0, 0);
-    }
+    normalizeModel(obj);
+
+    const box = new THREE.Box3().setFromObject(obj);
+    const sphere = box.getBoundingSphere(new THREE.Sphere());
+    camera.position.set(0, 0, sphere.radius * 3);
+    camera.lookAt(0, 0, 0);
 
     model.traverse((child) => {
       if (child.isMesh) {
@@ -49,7 +50,6 @@ function Model({ url, type, fallbackColor, isHovered, shouldResetRotation }) {
       }
     });
   }, [model, camera, fallbackColor, type]);
-
   useFrame(() => {
     if (ref.current) {
       if (isHovered) {
@@ -142,7 +142,12 @@ export default function SkillCard({ icon, name, color = "#cccccc", type }) {
       initial={{ opacity: 0, y: 40, scale: 0.8 }}
       animate={
         isInView
-          ? { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: "easeOut" } }
+          ? {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              transition: { duration: 0.7, ease: "easeOut" },
+            }
           : {}
       }
       className="backdrop-blur-sm rounded-xl p-4 shadow-md flex flex-col items-center justify-center hover:shadow-lg transition border hover-fade-up w-28 sm:w-36 md:w-44 lg:w-52 xl:w-60"
