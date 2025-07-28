@@ -5,33 +5,33 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { motion, useInView } from "framer-motion";
 
-function normalizeModelSize(model, targetSize = 1) {
+// Center and scale model to fit into view
+function normalizeModel(model, targetSize = 1.5) {
   const box = new THREE.Box3().setFromObject(model);
   const size = new THREE.Vector3();
   box.getSize(size);
   const center = new THREE.Vector3();
   box.getCenter(center);
-  model.position.sub(center);
+  model.position.sub(center); // Center the model
   const maxAxis = Math.max(size.x, size.y, size.z);
-  const scaleFactor = (targetSize * 1.5) / maxAxis;
-  model.scale.setScalar(scaleFactor);
+  const scale = targetSize / maxAxis;
+  model.scale.setScalar(scale);
 }
 
 function Model({ url, type, fallbackColor, isHovered, shouldResetRotation }) {
   const loader = type === "fbx" ? FBXLoader : GLTFLoader;
   const object = useLoader(loader, url);
+  const model = object.scene || object;
   const ref = useRef();
   const { camera } = useThree();
-  const model = object.scene || object;
 
   useEffect(() => {
     if (ref.current) {
-      normalizeModelSize(ref.current);
+      normalizeModel(ref.current);
+
       const box = new THREE.Box3().setFromObject(ref.current);
-      const size = new THREE.Vector3();
-      box.getSize(size);
-      const maxDim = Math.max(size.x, size.y, size.z);
-      camera.position.set(0, 0, maxDim * 2);
+      const sphere = box.getBoundingSphere(new THREE.Sphere());
+      camera.position.set(0, 0, sphere.radius * 3);
       camera.lookAt(0, 0, 0);
     }
 
@@ -39,12 +39,11 @@ function Model({ url, type, fallbackColor, isHovered, shouldResetRotation }) {
       if (child.isMesh) {
         child.castShadow = true;
         child.receiveShadow = true;
-
         if (type === "fbx") {
           child.material = new THREE.MeshStandardMaterial({
             color: new THREE.Color(fallbackColor),
-            metalness: 0.1,
-            roughness: 0.4,
+            metalness: 0.2,
+            roughness: 0.5,
           });
         }
       }
@@ -54,7 +53,7 @@ function Model({ url, type, fallbackColor, isHovered, shouldResetRotation }) {
   useFrame(() => {
     if (ref.current) {
       if (isHovered) {
-        ref.current.rotation.y += 0.1;
+        ref.current.rotation.y += 0.05;
       } else if (shouldResetRotation) {
         ref.current.rotation.y += (0 - ref.current.rotation.y) * 0.1;
       }
@@ -102,13 +101,7 @@ export default function SkillCard({ icon, name, color = "#cccccc", type }) {
           }}
         >
           <ambientLight intensity={1.5} />
-          <directionalLight
-            position={[3, 5, 5]}
-            intensity={4}
-            castShadow
-            shadow-mapSize-width={1024}
-            shadow-mapSize-height={1024}
-          />
+          <directionalLight position={[5, 5, 5]} intensity={2} castShadow />
           <Suspense fallback={null}>
             <Model
               url={icon}
@@ -152,14 +145,14 @@ export default function SkillCard({ icon, name, color = "#cccccc", type }) {
           ? { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: "easeOut" } }
           : {}
       }
-      className="backdrop-blur-sm rounded-xl p-4 shadow-md flex flex-col items-center justify-center hover:shadow-lg transition border hover-fade-up w-25 sm:w-35 md:w-56 lg:w-52 xl:w-62"
+      className="backdrop-blur-sm rounded-xl p-4 shadow-md flex flex-col items-center justify-center hover:shadow-lg transition border hover-fade-up w-28 sm:w-36 md:w-44 lg:w-52 xl:w-60"
       style={{ borderColor: color }}
     >
       <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36 mb-3 overflow-hidden">
         {content}
       </div>
       <p
-        className="text-center text-xs sm:text-sm mg:text-base lg:text-xl font-medium"
+        className="text-center text-xs sm:text-sm md:text-base lg:text-lg font-medium"
         style={{ color: color }}
       >
         {name}
