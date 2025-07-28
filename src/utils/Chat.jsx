@@ -311,7 +311,7 @@ const Chat = () => {
               className={isOnline ? "text-green-400" : "text-gray-400"}
             />
             <span className="text-sm">
-              {isOnline ? "Online" : "......Connecting"}
+              {isOnline ? "Online" : "Connecting..."}
             </span>
           </div>
           <button onClick={handleLogout}> Logout</button>

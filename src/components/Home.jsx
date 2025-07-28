@@ -229,7 +229,7 @@ function Home() {
                     transition={{ delay: 2, duration: 0.6 }}
                   >
                     <p className="text-2xl md:text-5xl lg:text-7xl font-bold">
-                      {viewCount}
+                      {viewCount||"30"}
                     </p>
                     <p className="text-sm md:text-lg font-semibold">VIEWS</p>
                   </motion.div>
