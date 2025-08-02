@@ -42,7 +42,7 @@ function GithubActivity() {
   const isInView = useInView(heatmapRef, { once: true });
 
   useEffect(() => {
-    console.log("Github Activity Component Mounted",isInView);
+ 
     if (isInView) {
       const cells = heatmapRef.current?.querySelectorAll("rect");
       if (cells) {
