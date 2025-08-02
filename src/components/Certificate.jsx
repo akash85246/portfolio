@@ -136,18 +136,18 @@ function Certificate() {
         <div className="gap-1 sm:gap-2 md:gap-5 grid grid-cols-1 col-span-2 md:col-span-1">
           <AnimatedImage
             src={vihaan}
-            delay={1.6}
+            delay={1}
             className="aspect-[3/2] w-full object-cover"
           />
           <AnimatedImage
             src={gdsc}
-            delay={1.6}
+            delay={1}
             className="aspect-[3/2] w-full object-cover"
           />
         </div>
         <AnimatedImage
           src={pbel}
-          delay={1.4}
+          delay={0}
           className="md:aspect-[3/2] col-span-3 md:col-span-2 w-full object-cover"
         />
       </div>
