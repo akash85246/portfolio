@@ -83,9 +83,10 @@ function ProjectCard({
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`h-2 w-2 md:w-3 md:h-3 rounded-full ${
+              className={`h-2 w-2 md:w-3 md:h-3 lg:h-4 lg:w-4 rounded-full ${
                 index === currentIndex ? "highlight" : "normal"
               }`}
+              aria-label={`Slide ${index + 1}`}
             />
           ))}
         </div>
@@ -94,12 +95,14 @@ function ProjectCard({
         <button
           onClick={prevSlide}
           className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-opacity-50 text-white px-2 py-1 rounded-full"
+        aria-label="Previous Slide"
         >
           <ArrowLeftIcon className="text-highlight" />
         </button>
         <button
           onClick={nextSlide}
           className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-opacity-50 text-white px-2 py-1 rounded-full"
+        aria-label="Next Slide"
         >
           <ArrowRightIcon className="text-highlight" />
         </button>
@@ -115,15 +118,15 @@ function ProjectCard({
         </p>
         <ul className="project-tags flex flex-wrap gap-2 mb-4 lg:mb-2">
           {tags.map((tag, index) => (
-            <span
+            <li
               key={index}
               className="skill-card-ltr p-2 px-4 rounded-xl backdrop-blur-md backdrop-opacity-70 border border-white/20 
-              text-xs md:text-sm text-white flex items-center justify-center 
+              text-[0.8rem] md:text-xs 2xl:text-sm text-white flex items-center justify-center 
               transition-all duration-300 ease-in-out hover:scale-110 hover:-translate-y-1 
               hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] "
             >
               {tag}
-            </span>
+            </li>
           ))}
         </ul>
         <div className="project-links flex gap-4">

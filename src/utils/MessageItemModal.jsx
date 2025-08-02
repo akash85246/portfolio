@@ -23,6 +23,7 @@ function MessageItemModal({
           <button
             onClick={() => onDelete(msg)}
             className="flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium  hover:bg-red-500 transition-all duration-200 shadow-md"
+            aria-label="Delete Message"
           >
             <Trash2 size={16} />
             Delete
@@ -35,6 +36,7 @@ function MessageItemModal({
                 setShowModal(false);
             }}
             className="flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium hover:bg-green-500 transition-all duration-200 shadow-md"
+            aria-label="Update Message"
           >
             <Pencil size={16} />
             Update
@@ -49,6 +51,7 @@ function MessageItemModal({
             setShowModal(false);
         }}
         className="flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium hover:bg-blue-500 transition-all duration-200 shadow-md"
+        aria-label="Reply to Message"
       >
         <Reply size={16} />
         Reply

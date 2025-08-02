@@ -5,10 +5,10 @@ function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#DC143C] text-white py-6 px-4 mt-12 orbitron" id="footer">
+    <footer className="bg-[#DC143C] text-white py-6 px-4 orbitron" id="footer">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Copyright */}
-        <p className="text-sm text-gray-400 text-center md:text-left">
+        <p className="text-sm text-gray-200 text-center md:text-left">
           &copy; {currentYear} Akash Rajput. All rights reserved.
         </p>
 

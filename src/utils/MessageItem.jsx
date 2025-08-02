@@ -102,6 +102,7 @@ const MessageItem = ({
                 <img
                   src={repliedMessage.file_url}
                   className="w-auto max-w-full max-h-[150px] sm:max-h-[200px] rounded-lg mb-2 object-contain"
+                  alt="attachment"
                 />
               ) : (
                 repliedMessage.content

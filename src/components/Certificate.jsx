@@ -57,8 +57,6 @@ const AnimatedImage = ({ src, className, delay }) => {
   );
 };
 
-
-
 function Certificate() {
   const certificateRef = useRef(null);
   const isInView = useInView(certificateRef, { once: true, margin: "-100px" });
@@ -110,48 +108,54 @@ function Certificate() {
         </div>
 
         <div className="flex flex-col gap-1 sm:gap-2 md:gap-5">
-      {/* First Row */}
-      <div className="gap-1 sm:gap-2 md:gap-5 grid-cols-5 grid md:grid-cols-3">
-        <AnimatedImage
-          src={fullstack}
-          delay={0}
-          className="md:aspect-[3/2] col-span-3 md:col-span-2 w-full object-cover"
-        />
-        <div className="gap-1 sm:gap-2 md:gap-5 grid grid-cols-1 col-span-2 md:col-span-1">
-          <AnimatedImage
-            src={sql}
-            delay={1}
-            className="aspect-[3/2] w-full object-cover"
-          />
-          <AnimatedImage
-            src={ibm}
-            delay={1}
-            className="aspect-[3/2] w-full object-cover"
-          />
-        </div>
-      </div>
+          {/* First Row */}
+          <div className="gap-1 sm:gap-2 md:gap-5 grid-cols-5 grid md:grid-cols-3">
+            <AnimatedImage
+              src={fullstack}
+              delay={0}
+              className="md:aspect-[3/2] col-span-3 md:col-span-2 w-full object-cover"
+              alt="Full Stack Certificate"
+            />
+            <div className="gap-1 sm:gap-2 md:gap-5 grid grid-cols-1 col-span-2 md:col-span-1">
+              <AnimatedImage
+                src={sql}
+                delay={1}
+                className="aspect-[3/2] w-full object-cover"
+                alt="SQL Certificate"
+              />
+              <AnimatedImage
+                src={ibm}
+                delay={1}
+                className="aspect-[3/2] w-full object-cover"
+                alt="IBM Certificate"
+              />
+            </div>
+          </div>
 
-      {/* Second Row */}
-      <div className="gap-1 sm:gap-2 md:gap-5 grid-cols-5 grid md:grid-cols-3">
-        <div className="gap-1 sm:gap-2 md:gap-5 grid grid-cols-1 col-span-2 md:col-span-1">
-          <AnimatedImage
-            src={vihaan}
-            delay={1}
-            className="aspect-[3/2] w-full object-cover"
-          />
-          <AnimatedImage
-            src={gdsc}
-            delay={1}
-            className="aspect-[3/2] w-full object-cover"
-          />
+          {/* Second Row */}
+          <div className="gap-1 sm:gap-2 md:gap-5 grid-cols-5 grid md:grid-cols-3">
+            <div className="gap-1 sm:gap-2 md:gap-5 grid grid-cols-1 col-span-2 md:col-span-1">
+              <AnimatedImage
+                src={vihaan}
+                delay={1}
+                className="aspect-[3/2] w-full object-cover"
+                alt="Vihaan Certificate"
+              />
+              <AnimatedImage
+                src={gdsc}
+                delay={1}
+                className="aspect-[3/2] w-full object-cover"
+                alt="GDSC Certificate"
+              />
+            </div>
+            <AnimatedImage
+              src={pbel}
+              delay={0}
+              className="md:aspect-[3/2] col-span-3 md:col-span-2 w-full object-cover"
+              alt="PBEL Certificate"
+            />
+          </div>
         </div>
-        <AnimatedImage
-          src={pbel}
-          delay={0}
-          className="md:aspect-[3/2] col-span-3 md:col-span-2 w-full object-cover"
-        />
-      </div>
-    </div>
 
         <div>
           <h1 className="pt-5 md:pt-10 text-xl sm:text-2xl md:text-3xl text-[#00bcd4] mb-2 orbitron text-left ">

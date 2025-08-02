@@ -129,6 +129,7 @@ function Contact() {
               <button
                 onClick={handleGoogleLogin}
                 className="flex items-center justify-center gap-2 w-full px-4 sm:px-5 py-2.5 sm:py-3 text-[0.8rem]  sm:text-sm font-medium text-white bg-red-500 rounded-xl hover:bg-red-600 transition-all duration-200 shadow-md"
+                aria-label="Login with Google"
               >
                 <GoogleIcon className="text-[0.8rem] sm:text-sm md:text-base lg:text-lg" />
                 Login with Google
@@ -137,6 +138,7 @@ function Contact() {
               <button
                 onClick={handleGithubLogin}
                 className="flex items-center justify-center gap-2 w-full px-4 sm:px-5 py-2.5 sm:py-3 text-[0.8rem]  sm:text-sm font-medium text-white bg-zinc-800 hover:bg-zinc-900 rounded-xl transition-all duration-200 shadow-md"
+                 aria-label="Login with GitHub"
               >
                 <GitHubIcon className="text-[0.8rem] sm:text-sm md:text-base lg:text-lg" />
                 Login with GitHub
@@ -153,6 +155,7 @@ function Contact() {
               <a
                 href="mailto:akash.rajput.dev@gmail.com"
                 className="flex items-center justify-center gap-2 w-full px-4 sm:px-5 py-2.5 sm:py-3 text-[0.8rem] sm:text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all duration-200 shadow-md"
+                aria-label="Contact via Email"
               >
                 <EmailIcon className="text-[0.8rem] sm:text-sm md:text-base lg:text-lg" />
                 Contact via Email

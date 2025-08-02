@@ -129,8 +129,6 @@ const Chat = () => {
         setUsers(filteredUsers);
       });
     }
-
-    
   }, [isAdmin, adminId]);
 
   useEffect(() => {
@@ -314,7 +312,9 @@ const Chat = () => {
               {isOnline ? "Online" : "Connecting..."}
             </span>
           </div>
-          <button onClick={handleLogout}> Logout</button>
+          <button onClick={handleLogout} aria-label="logout">
+            Logout
+          </button>
         </div>
 
         {/* Messages */}
@@ -458,6 +458,7 @@ const Chat = () => {
             ? "bg-gray-500 cursor-not-allowed"
             : "bg-blue-600 hover:bg-blue-700"
         }`}
+              aria-label="Send Message"
             >
               <Send className="text-white text-[0.8rem] sm:text-base" />
             </button>

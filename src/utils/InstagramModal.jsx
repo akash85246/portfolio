@@ -55,10 +55,10 @@ function InstagramModal({ isOpen, story, onClose, onNext, onPrev, currentIndex, 
           />
         )}
         <div className="absolute top-1/2 left-0 transform -translate-y-1/2 px-2">
-          <button onClick={onPrev} disabled={currentIndex === 0} className="text-white text-xl">{`‹`}</button>
+          <button onClick={onPrev} disabled={currentIndex === 0} className="text-white text-xl" aria-label="backward button">{`‹`}</button>
         </div>
         <div className="absolute top-1/2 right-0 transform -translate-y-1/2 px-2">
-          <button onClick={onNext} disabled={currentIndex === totalStories - 1} className="text-white text-xl">{`›`}</button>
+          <button onClick={onNext} disabled={currentIndex === totalStories - 1} className="text-white text-xl" aria-label="forward button" >{`›`}</button>
         </div>
       </div>
     </div>

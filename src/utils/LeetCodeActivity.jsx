@@ -27,9 +27,9 @@ function StatCard({ icon, title, value }) {
         {icon}
       </div>
       <div className="w-full text-center">
-        <h3 className="text-white font-semibold text-[0.6rem] md:text-sm absolute top-2 left-2">
+        <h1 className="text-white font-semibold text-[0.6rem] md:text-sm absolute top-2 left-2">
           {title}
-        </h3>
+        </h1>
         <p className="text-gray-300 text-xs sm:text-lg md:text-xl font-semibold mt-4">
           {value}
         </p>
