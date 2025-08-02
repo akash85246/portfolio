@@ -48,7 +48,6 @@ function Home() {
       getIpAddress();
     }
 
-    // Now post the view
     const postView = async () => {
       try {
         await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/view/`, {
@@ -197,7 +196,7 @@ function Home() {
                 <AnimatedTextLine
                   text="FULLY PASSIONATE ABOUT BUILDING."
                   startDelay={30}
-                 className="w-full whitespace-pre-wrap text-[#DC143C] break-words min-h-10"
+                  className="w-full whitespace-pre-wrap text-[#DC143C] break-words min-h-10"
                 />
                 <AnimatedTextLine
                   text="TURNING SPARKS OF IDEAS"
@@ -220,7 +219,7 @@ function Home() {
                   initial={{ opacity: 0, y: 40, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{delay: 1.2, duration: 0.8, ease: "easeOut" }}
+                  transition={{ delay: 1.2, duration: 0.8, ease: "easeOut" }}
                 >
                   {/* VIEWS */}
                   <motion.div
@@ -229,7 +228,7 @@ function Home() {
                     transition={{ delay: 2, duration: 0.6 }}
                   >
                     <p className="text-2xl md:text-5xl lg:text-7xl font-bold">
-                      {viewCount||"30"}
+                      {viewCount || "30"}
                     </p>
                     <p className="text-sm md:text-lg font-semibold">VIEWS</p>
                   </motion.div>

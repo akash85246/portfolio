@@ -1,8 +1,8 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import CalendarHeatmap from "react-calendar-heatmap";
 import "react-calendar-heatmap/dist/styles.css";
 import { Tooltip as ReactTooltip } from "react-tooltip";
-import { Activity, CalendarDays, Flame, Clock } from "lucide-react"; 
+import { Activity, CalendarDays, Flame, Clock } from "lucide-react";
 import { useInView } from "framer-motion";
 
 const token = import.meta.env.VITE_GITHUB_TOKEN;
@@ -38,15 +38,16 @@ function GithubActivity() {
   const [contributions, setContributions] = useState([]);
   const [weeks, setWeeks] = useState([]);
 
-   const heatmapRef = useRef(null);
+  const heatmapRef = useRef(null);
   const isInView = useInView(heatmapRef, { once: true });
 
   useEffect(() => {
+    console.log("Github Activity Component Mounted",isInView);
     if (isInView) {
       const cells = heatmapRef.current?.querySelectorAll("rect");
       if (cells) {
         cells.forEach((cell) => {
-          const delay = Math.random() * 1.5; 
+          const delay = Math.random() * 1.5;
           cell.classList.add("random-heatmap-appear");
           cell.style.animationDelay = `${delay}s`;
         });
@@ -127,27 +128,26 @@ function GithubActivity() {
   return (
     <div className="w-full overflow-x-auto">
       <div ref={heatmapRef}>
-      <CalendarHeatmap
-        startDate={new Date(new Date().getFullYear(), 0, 1)}
-        endDate={new Date()}
-        values={contributions}
-        classForValue={getClassForValue}
-        showWeekdayLabels={false}
-        showMonthLabels={false}
-        gutterSize={4}
-        tooltipDataAttrs={(value) => {
-          if (!value.date) return null;
-          return {
-            "data-tooltip-id": "github-heatmap",
-            "data-tooltip-content": `${value.date}: ${value.contributionCount} contributions`,
-          };
-        }}
-        horizontal
-      />
-      <ReactTooltip id="github-heatmap" />
+        <CalendarHeatmap
+          startDate={new Date(new Date().getFullYear(), 0, 1)}
+          endDate={new Date()}
+          values={contributions}
+          classForValue={getClassForValue}
+          showWeekdayLabels={false}
+          showMonthLabels={false}
+          gutterSize={4}
+          tooltipDataAttrs={(value) => {
+            if (!value.date) return null;
+            return {
+              "data-tooltip-id": "github-heatmap",
+              "data-tooltip-content": `${value.date}: ${value.contributionCount} contributions`,
+            };
+          }}
+          horizontal
+        />
+        <ReactTooltip id="github-heatmap" />
+      </div>
 
-    </div>
-      
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 my-2 sm:my-6">
         <StatCard
