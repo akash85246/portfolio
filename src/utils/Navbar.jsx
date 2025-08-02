@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
-import DownloadIcon from "@mui/icons-material/Download";
+import { Menu, X, Download } from "lucide-react";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -45,7 +43,7 @@ function Navbar() {
             download="Akash_Rajput.pdf"
             className="flex items-center justify-center gap-1 px-3 py-1 transition !text-sm"
           >
-            <DownloadIcon className="!w-4 !h-4" />
+            <Download className="!w-4 !h-4" />
             Resume
           </a>
 
@@ -55,7 +53,7 @@ function Navbar() {
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label="Toggle Menu"
             >
-              {menuOpen ? <CloseIcon /> : <MenuIcon />}
+              {menuOpen ? <X /> : <Menu />}
             </button>
           </div>
         </div>

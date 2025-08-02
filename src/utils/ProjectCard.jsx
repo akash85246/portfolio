@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
@@ -97,14 +96,14 @@ function ProjectCard({
           className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-opacity-50 text-white px-2 py-1 rounded-full"
         aria-label="Previous Slide"
         >
-          <ArrowLeftIcon className="text-highlight" />
+          <ChevronLeft className="text-highlight" />
         </button>
         <button
           onClick={nextSlide}
           className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-opacity-50 text-white px-2 py-1 rounded-full"
         aria-label="Next Slide"
         >
-          <ArrowRightIcon className="text-highlight" />
+          <ChevronRight className="text-highlight" />
         </button>
       </div>
 

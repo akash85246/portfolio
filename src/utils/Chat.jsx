@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { DoneAll, FiberManualRecord, Send } from "@mui/icons-material";
+import { Circle ,SendHorizontal} from "lucide-react";
 import { X } from "lucide-react";
-import PhotoIcon from "@mui/icons-material/Photo";
+import { Image } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import socket from "../socket";
-import { login, logout } from "../redux/slices/authSlice";
-import { setUser, clearUser } from "../redux/slices/userSlice";
+import {  logout } from "../redux/slices/authSlice";
+import {clearUser } from "../redux/slices/userSlice";
 
 import MessageItem from "./MessageItem";
 
@@ -305,7 +305,7 @@ const Chat = () => {
         {/* Header */}
         <div className="flex justify-between items-center border-b border-gray-700">
           <div className="p-4  flex items-center gap-2">
-            <FiberManualRecord
+            <Circle
               className={isOnline ? "text-green-400" : "text-gray-400"}
             />
             <span className="text-sm">
@@ -434,7 +434,7 @@ const Chat = () => {
                   htmlFor="fileInput"
                   className="cursor-pointer text-gray-400 hover:text-white"
                 >
-                  <PhotoIcon />
+                 <Image className="w-5 h-5 sm:w-6 sm:h-6" />
                 </label>
               </>
             )}
@@ -460,7 +460,7 @@ const Chat = () => {
         }`}
               aria-label="Send Message"
             >
-              <Send className="text-white text-[0.8rem] sm:text-base" />
+              <SendHorizontal className="text-white text-[0.8rem] sm:text-base" />
             </button>
           </div>
         </div>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 function Scroll() {
   const [isBottom, setIsBottom] = useState(false);
@@ -32,9 +31,9 @@ function Scroll() {
     >
       <span>{isBottom ? "Top" : "Scroll"}</span>
       {isBottom ? (
-        <KeyboardArrowUpIcon className="text-2xl" />
+        <ChevronUp className="text-2xl" />
       ) : (
-        <KeyboardArrowDownIcon className="text-2xl" />
+        <ChevronDown className="text-2xl" />
       )}
     </button>
   );

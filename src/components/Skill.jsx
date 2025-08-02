@@ -28,7 +28,7 @@ import tailwind from "../assets/SkillImages/tailwind.glb";
 
 import { motion, useInView } from "framer-motion";
 import AnimatedTextLine from "../utils/AnimatedText";
-import { useState, useRef } from "react";
+import {  useRef } from "react";
 
 function Skill() {
   const skillLogos = [

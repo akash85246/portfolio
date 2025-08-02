@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { DoneAll } from "@mui/icons-material";
+import { CheckCheck } from "lucide-react";
 import MessageItemModal from "./MessageItemModal";
 
 const MessageItem = ({
@@ -143,23 +143,22 @@ const MessageItem = ({
           )}
 
           {isOwnMessage && (
-            <DoneAll
-              fontSize="small"
+            <CheckCheck
               className={`absolute bottom-1 right-1 ${
                 msg.status === "read" ? "text-green-600" : "text-gray-400"
-              }`}
+              } w-3 h-3 sm:w-4 sm:h-4`}
             />
           )}
         </div>
         <div className="text-[6px] sm:text-[10px] mt-1 text-gray-400 w-full flex justify-end">
-         {!msg.is_updated && (
-          <span >
-            {new Date(msg.created_at).toLocaleTimeString()}
-          </span>)}
+          {!msg.is_updated && (
+            <span>{new Date(msg.created_at).toLocaleTimeString()}</span>
+          )}
 
           {msg.is_updated && (
-            <span className="text-[6px] sm:text-[10px] mt-1 text-gray-400"> * 
-              {new Date(msg.updated_at).toLocaleTimeString()}
+            <span className="text-[6px] sm:text-[10px] mt-1 text-gray-400">
+              {" "}
+              *{new Date(msg.updated_at).toLocaleTimeString()}
             </span>
           )}
         </div>

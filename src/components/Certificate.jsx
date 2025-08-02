@@ -16,7 +16,6 @@ import mlFundamentalsImage from "../assets/Certificates/infosys/fundamentalsOfMa
 import generativeAIImage from "../assets/Certificates/infosys/generativeAI.png";
 import generativeModelsImage from "../assets/Certificates/infosys/generativeModels.png";
 import hipImage from "../assets/Certificates/infosys/hip.png";
-import ibmImage from "../assets/Certificates/infosys/IBM.png";
 import nlpImage from "../assets/Certificates/infosys/nlp.png";
 import gptImage from "../assets/Certificates/infosys/OpenAIGpt.png";
 import transformerImage from "../assets/Certificates/infosys/preTrainedTransformer.png";

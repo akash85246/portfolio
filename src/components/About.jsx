@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState, useRef } from "react";
 import InstagramStoryCard from "../utils/InstagramStoryCard";
 import InstagramModal from "../utils/InstagramModal";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { ChevronRight } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 
 function About() {
@@ -134,7 +134,7 @@ function About() {
 
           {!isAtEnd && (
             <div className="h-full w-10 flex items-center justify-end pr-2">
-              <ArrowForwardIosIcon fontSize="large" className="text-white" />
+              <ChevronRight fontSize="large" className="text-white" />
             </div>
           )}
         </div>

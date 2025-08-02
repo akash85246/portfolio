@@ -1,5 +1,5 @@
 import ProjectCard from "../utils/ProjectCard";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { ExternalLink } from "lucide-react";
 
 import skill1 from "../assets/ProjectImages/Project1/page1.png";
 import shelf1 from "../assets/ProjectImages/Project2/page1.png";
@@ -22,7 +22,7 @@ import engineer7 from "../assets/ProjectImages/Project3/page7.png";
 import engineer8 from "../assets/ProjectImages/Project3/page8.png";
 import { motion, useInView } from "framer-motion";
 import AnimatedTextLine from "../utils/AnimatedText";
-import { useState, useRef } from "react";
+import {  useRef } from "react";
 
 function Project() {
   const aboutRef = useRef(null);
@@ -165,7 +165,7 @@ function Project() {
             className="inline-flex items-center gap-2 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:text-[#8b5cf6] hover:scale-105 transition-all duration-300 ease-in-out border border-white/10 backdrop-blur-sm text-xs sm:text-sm md:text-base lg:text-base"
           >
             More Projects on GitHub
-            <ArrowForwardIosIcon className="text-sm" />
+            <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 " />
           </a>
         </div>
       </motion.div>

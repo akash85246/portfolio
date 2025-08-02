@@ -1,11 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
 import { login, logout } from "../redux/slices/authSlice";
 import { setUser, clearUser } from "../redux/slices/userSlice";
-import React, {  useRef, useState, useEffect } from "react";
+import React, {  useRef,  useEffect } from "react";
 import Chat from "../utils/Chat.jsx";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import GoogleIcon from "@mui/icons-material/Google";
-import EmailIcon from "@mui/icons-material/Email";
+import { Github, Mail, CircleUser } from "lucide-react";
 import axios from "axios";
 import socket from "../socket.js";
 
@@ -131,7 +129,7 @@ function Contact() {
                 className="flex items-center justify-center gap-2 w-full px-4 sm:px-5 py-2.5 sm:py-3 text-[0.8rem]  sm:text-sm font-medium text-white bg-red-500 rounded-xl hover:bg-red-600 transition-all duration-200 shadow-md"
                 aria-label="Login with Google"
               >
-                <GoogleIcon className="text-[0.8rem] sm:text-sm md:text-base lg:text-lg" />
+                <CircleUser className="text-[0.8rem] sm:text-sm md:text-base lg:text-lg" />
                 Login with Google
               </button>
 
@@ -140,7 +138,7 @@ function Contact() {
                 className="flex items-center justify-center gap-2 w-full px-4 sm:px-5 py-2.5 sm:py-3 text-[0.8rem]  sm:text-sm font-medium text-white bg-zinc-800 hover:bg-zinc-900 rounded-xl transition-all duration-200 shadow-md"
                  aria-label="Login with GitHub"
               >
-                <GitHubIcon className="text-[0.8rem] sm:text-sm md:text-base lg:text-lg" />
+                <Github className="text-[0.8rem] sm:text-sm md:text-base lg:text-lg" />
                 Login with GitHub
               </button>
 
@@ -157,7 +155,7 @@ function Contact() {
                 className="flex items-center justify-center gap-2 w-full px-4 sm:px-5 py-2.5 sm:py-3 text-[0.8rem] sm:text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all duration-200 shadow-md"
                 aria-label="Contact via Email"
               >
-                <EmailIcon className="text-[0.8rem] sm:text-sm md:text-base lg:text-lg" />
+                <Mail className="text-[0.8rem] sm:text-sm md:text-base lg:text-lg" />
                 Contact via Email
               </a>
             </div>
