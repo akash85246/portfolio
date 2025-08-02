@@ -42,7 +42,7 @@ function Navbar() {
         <div className="flex items-center space-x-4">
           <a
             href="/resume.pdf"
-            download
+            download="Akash_Rajput.pdf"
             className="flex items-center justify-center gap-1 px-3 py-1 transition !text-sm"
           >
             <DownloadIcon className="!w-4 !h-4" />
