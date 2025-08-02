@@ -57,7 +57,7 @@ function Project() {
       description:
         "A community-driven book review platform where anyone can share their reviews of books. The site integrates Google Authentication for user sign-in and displays book cover images via the Open Library API. Built with Node.js, EJS for templating, PostgreSQL for the database, and styled with modern CSS techniques.",
       github: "https://github.com/akash85246/ShelfWise",
-      link: "#",
+      link: "https://shelfwise-6o3j.onrender.com/",
       tags: [
         "nodejs",
         "express",
@@ -87,7 +87,7 @@ function Project() {
       description:
         "Engineer Insights is a dynamic and feature-rich blogging platform built to empower engineers, developers, and tech enthusiasts to share knowledge, express ideas, and grow their professional presence. Whether you’re a student documenting your learning journey or a seasoned developer writing in-depth technical articles, Engineer Insights gives you the tools to write, engage, and evolve.",
       github: "https://github.com/akash85246/Engineer-Insights",
-      link: "#",
+      link: "https://engineer-insights.onrender.com/",
       tags: [
         "nodejs",
         "express",
@@ -110,7 +110,7 @@ function Project() {
       description:
         "Scribly is a modern sticky note web app designed to enhance productivity and organization. With a sleek and intuitive interface, it allows users to effortlessly add, edit, delete, and organize notes.",
       github: "https://github.com/akash85246/Scribly",
-      link: "#",
+      link: "https://scribly-kappa.vercel.app/",
       tags: [
         "reactjs",
         "javascript",
