@@ -41,7 +41,7 @@ const fadeInPop = (delay) => ({
   },
 });
 
-const AnimatedImage = ({ src, className, delay }) => {
+const AnimatedImage = ({ src, className, delay,alt }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "0px 0px -100px 0px" });
 
@@ -53,6 +53,8 @@ const AnimatedImage = ({ src, className, delay }) => {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       className={className}
+      alt={alt}
+      loading="lazy"
     />
   );
 };
