@@ -22,7 +22,7 @@ function App() {
     if (progress >= 100) {
       const timeout = setTimeout(() => {
         dispatch(clearLoading());
-      }, 0); 
+      }, 500); 
       return () => clearTimeout(timeout);
     }
   }, [progress, dispatch]);
