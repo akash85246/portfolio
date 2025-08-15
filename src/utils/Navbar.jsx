@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Menu, X, Download } from "lucide-react";
+import { Menu, X} from "lucide-react";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -39,11 +39,11 @@ function Navbar() {
 
         <div className="flex items-center space-x-4">
           <a
-            href="/resume.pdf"
-            download="Akash_Rajput.pdf"
+            href="https://akash85246.github.io/Resume/"
+            target="_blank"
             className="flex items-center justify-center gap-1 px-3 py-1 transition !text-sm"
           >
-            <Download className="!w-4 !h-4" />
+        
             Resume
           </a>
 

@@ -16,7 +16,6 @@ export function useAttackAnimation(object4Ref) {
 
     const handleGlobalClick = () => {
       const now = Date.now();
-      console.log("🕷️ Global click detected");
 
       if (now - lastTapTimeRef.current > 1000) {
         tapCountRef.current = 0;
