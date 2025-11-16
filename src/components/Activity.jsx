@@ -7,22 +7,22 @@ function Activity() {
   const isInView = useInView(activityRef, { once: true, margin: "-100px" });
 
   return (
-    <section className="next-section activity p-5" id="activity">
+    <section className="section " id="activity">
       <motion.div
         ref={activityRef}
         initial={{ opacity: 0, y: 50 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-        className="flex flex-col justify-around  min-h-[60vh]"
+        className="flex flex-col justify-around"
       >
         <div>
-          <h1 className="section-heading text-left">GITHUB</h1>
+          <h1 className="section-heading ">GITHUB</h1>
         </div>
 
         <GithubActivity />
 
         <div>
-          <h1 className="section-heading text-left">LEETCODE</h1>
+          <h1 className="section-heading mt-16">LEETCODE</h1>
         </div>
         <LeetCodeActivity />
       </motion.div>

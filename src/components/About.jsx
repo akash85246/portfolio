@@ -32,8 +32,6 @@ function About() {
     (state) => state.stories
   );
 
-  console.log("Stories from Redux:", stories, seen, loading, error);
-
   const handleClose = () => {
     setModalOpen(false);
   };
@@ -67,7 +65,7 @@ function About() {
         initial={{ opacity: 0, y: 50 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-        className="flex flex-col justify-around text-center min-h-[60vh]"
+        className="flex flex-col justify-around text-center"
       >
         <div className="flex flex-col items-start justify-center ">
           <h1 className="section-heading">ABOUT ME</h1>
@@ -120,7 +118,7 @@ function About() {
               <canvas className="absolute inset-0 w-full h-full z-0"></canvas>
 
               <ul
-                className="relative w-full h-[500px]"
+                className="relative w-full h-full"
                 ref={scrollContainerRef}
                 onScroll={handleScroll}
               >

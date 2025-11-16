@@ -3,12 +3,13 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-     fontFamily: {
-        orbitron: ['Orbitron', 'serif'],
-        michroma: ['Michroma', 'sans-serif'],
+      fontFamily: {
+        inter: ["Inter", "sans-serif"],
+        michroma: ["Michroma", "sans-serif"],
+        orbitron: ["Orbitron", "sans-serif"],
       },
       colors: {
-        primary: 'rgb(85, 68, 255)',
+        primary: "rgb(85, 68, 255)",
       },
       fontSize: {
         xxs: "0.625rem",
@@ -21,7 +22,6 @@ export default {
         xxxxxxxxxs: "0.08rem",
         xxxxxxxxxxs: "0.05rem",
       },
-
     },
   },
   plugins: [],

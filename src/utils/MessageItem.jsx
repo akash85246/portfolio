@@ -91,7 +91,7 @@ const MessageItem = ({
 
       <div className="flex flex-col items-start relative">
         {repliedMessage && (
-          <div className="bg-white/10 text-gray-300 text-xs px-2 py-1 mb-1 rounded border-l-4 border-blue-400">
+          <div className="bg-[#262344]/90 w-full text-gray-300 text-xs px-2 py-1 rounded border-l-4 border-blue-400">
             <div className="font-semibold">
               {repliedMessage.user_id === userId
                 ? "You"
@@ -113,10 +113,8 @@ const MessageItem = ({
         <div
           ref={messageRef}
           onClick={() => setShowModal((prev) => !prev)}
-          className={`rounded-lg px-4 py-2 max-w-40 sm:max-w-[35rem] text-[0.6rem] sm:text-sm relative break-words cursor-pointer ${
-            isOwnMessage
-              ? "bg-blue-600/25 text-white"
-              : "bg-black/10 text-white"
+          className={`flex  flex-col gap-2 rounded-lg px-4 py-2 max-w-40 sm:max-w-[35rem] text-[0.6rem] sm:text-sm relative break-words cursor-pointer ${
+            isOwnMessage ? "bg-[#3B365A] text-white" : "bg-[#262344] text-white"
           }`}
         >
           {msg.file_url ? (
@@ -142,26 +140,30 @@ const MessageItem = ({
             msg.content
           )}
 
-          {isOwnMessage && (
+          <div className="relative -bottom-1 -right-1 text-[6px] sm:text-[10px] mt-1 text-gray-400 w-full flex justify-end">
+            {!msg.is_updated && (
+              <span>{new Date(msg.created_at).toLocaleTimeString()}</span>
+            )}
+
+            {msg.is_updated && (
+              <span className="text-[6px] sm:text-[10px] mt-1 text-gray-400">
+                {" "}
+                *{new Date(msg.updated_at).toLocaleTimeString()}
+              </span>
+            )}
+
+            {isOwnMessage && (
             <CheckCheck
-              className={`absolute bottom-1 right-1 ${
+              className={` ${
                 msg.status === "read" ? "text-green-600" : "text-gray-400"
               } w-3 h-3 sm:w-4 sm:h-4`}
             />
           )}
-        </div>
-        <div className="text-[6px] sm:text-[10px] mt-1 text-gray-400 w-full flex justify-end">
-          {!msg.is_updated && (
-            <span>{new Date(msg.created_at).toLocaleTimeString()}</span>
-          )}
+          </div>
 
-          {msg.is_updated && (
-            <span className="text-[6px] sm:text-[10px] mt-1 text-gray-400">
-              {" "}
-              *{new Date(msg.updated_at).toLocaleTimeString()}
-            </span>
-          )}
+          
         </div>
+
         {showModal && (
           <div ref={modalRef}>
             <MessageItemModal

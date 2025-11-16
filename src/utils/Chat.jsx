@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Circle ,SendHorizontal} from "lucide-react";
-import { X } from "lucide-react";
-import { Image } from "lucide-react";
+import { Circle, SendHorizontal, X, LogOut, Image } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import socket from "../socket";
-import {  logout } from "../redux/slices/authSlice";
-import {clearUser } from "../redux/slices/userSlice";
+import { logout } from "../redux/slices/authSlice";
+import { clearUser } from "../redux/slices/userSlice";
+import pattern from "../assets/Patterns/chatPattern.png";
 
 import MessageItem from "./MessageItem";
 
@@ -153,15 +152,6 @@ const Chat = () => {
     };
   }, [receiver_id, userId]);
 
-  // useEffect(() => {
-  //   console.log("Messages updated:", messages);
-  //   if (!hasMounted.current) {
-  //     hasMounted.current = true;
-  //     return;
-  //   }
-  //   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  // }, [messages]);
-
   const sendMessage = () => {
     if (!input && !file) return;
 
@@ -242,10 +232,10 @@ const Chat = () => {
 
   return (
     <div
-      className={`bg-white/5 col-span-7 md:col-span-2  backdrop-blur-md p-4 md:p-4 lg:p-8 rounded-2xl shadow-xl border border-white/10 grid grid-cols-4 items-center justify-center gap-10 relative`}
+      className={`col-span-7 md:col-span-2   p-2 rounded-2xl shadow-xl border border-white/10 grid grid-cols-4 items-center justify-center gap-10 relative`}
     >
       {isAdmin && (
-        <div className=" min-h-full pr-2 border-r border-gray-700 hidden sm:block">
+        <div className="absolute -left-76 bg-black/50 backdrop-blur-md min-h-full pr-2 hidden sm:block z-50  max-w-md p-5 pt-4">
           <div className="text-xl font-bold mb-4">Users</div>
           {users.map((user) => (
             <div
@@ -298,27 +288,38 @@ const Chat = () => {
       )}
 
       <div
-        className={`flex flex-col flex-1 ${
-          isAdmin ? "col-span-3" : "col-span-4"
+        className={`flex relative flex-col flex-1 ${
+          isAdmin ? "col-span-4" : "col-span-4"
         }`}
       >
         {/* Header */}
         <div className="flex justify-between items-center border-b border-gray-700">
           <div className="p-4  flex items-center gap-2">
             <Circle
-              className={isOnline ? "text-green-400" : "text-gray-400"}
+              className={` 
+    ${isOnline ? "text-green-400" : "text-gray-400"} 
+    w-3 h-3 drop-shadow-[0_0_4px_rgba(0,255,0,0.6)]
+  `}
+              strokeWidth={4}
             />
-            <span className="text-sm">
+            <span className="text-xs">
               {isOnline ? "Online" : "Connecting..."}
             </span>
           </div>
           <button onClick={handleLogout} aria-label="logout">
-            Logout
+            <LogOut size={16} />
           </button>
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-2 md:p-4 space-y-3   min-h-[35vh] max-h-[40vh]  sm:min-h-[30rem] sm:max-h-[35rem]">
+        <div
+          className="flex-1 overflow-y-auto p-2 md:p-4 space-y-3   min-h-[35vh] max-h-[40vh]  sm:min-h-[30rem] sm:max-h-[35rem] !pb-20"
+          style={{
+            backgroundImage: `url(${pattern})`,
+            backgroundSize: "contain",
+            backgroundRepeat: "repeat",
+          }}
+        >
           {messages.map((msg) => (
             <MessageItem
               key={msg.id}
@@ -341,11 +342,11 @@ const Chat = () => {
         </div>
 
         {/* Input */}
-        <div className="w-full">
+        <div className="w-full absolute bottom-2">
           {/* Image/File Preview Before Sending */}
           {((!isUploading && selectedUpdate?.file_url) ||
             (!isUploading && file)) && (
-            <div className="relative bg-black/20 p-3 rounded-lg mb-3 text-sm text-white border border-gray-600">
+            <div className="relative bg-[#262344] p-3 rounded-lg mx-4 text-sm text-white border border-gray-600">
               {/* Close Button */}
               <button
                 onClick={() => setFile(null)}
@@ -386,7 +387,7 @@ const Chat = () => {
           )}
 
           {selectedReply && (
-            <div className="relative bg-black/30 border border-gray-700 text-white rounded-lg p-3 mb-3 shadow-sm backdrop-blur-md">
+            <div className="relative bg-[#262344] m-6 border border-gray-700 text-white rounded-lg p-3 mb-3 shadow-sm backdrop-blur-md">
               {/* Close Button */}
               <button
                 onClick={() => setSelectedReply(null)}
@@ -420,32 +421,34 @@ const Chat = () => {
           )}
 
           {/* Chat Input Area */}
-          <div className="border-t border-gray-700 p-2 sm:p-3 flex items-center gap-2 sm:gap-3 bg-black/10 rounded-lg">
-            {!isUploading && (
-              <>
-                <input
-                  type="file"
-                  id="fileInput"
-                  accept=".jpg, .png, .gif, .webp"
-                  onChange={(e) => handleFileUpload(e.target.files[0])}
-                  className="hidden"
-                />
-                <label
-                  htmlFor="fileInput"
-                  className="cursor-pointer text-gray-400 hover:text-white"
-                >
-                 <Image className="w-5 h-5 sm:w-6 sm:h-6" />
-                </label>
-              </>
-            )}
+          <div className=" w-full p-2 sm:p-3 flex items-center gap-2 sm:gap-3 rounded-lg ">
+            <div className="rounded-full border border-gray-600 focus:ring-2 focus:ring-blue-500 w-full flex items-center gap-2 sm:gap-3 px-3 py-1 pl-6 bg-[#262344]">
+              {!isUploading && (
+                <>
+                  <input
+                    type="file"
+                    id="fileInput"
+                    accept=".jpg, .png, .gif, .webp"
+                    onChange={(e) => handleFileUpload(e.target.files[0])}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="fileInput"
+                    className="cursor-pointer text-gray-400 hover:text-white"
+                  >
+                    <Image className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </label>
+                </>
+              )}
 
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className="flex-1 bg-transparent text-white p-2 sm:py-2 sm:px-4 rounded-full border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400 text-[0.8rem] w-[100%] sm:text-base"
-              placeholder="Type a message..."
-            />
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className="flex-1  text-white p-2 sm:py-2 sm:px-4 focus:outline-none  placeholder:text-gray-400 text-[0.8rem] w-[100%] sm:text-base"
+                placeholder="Type a message..."
+              />
+            </div>
 
             <button
               onClick={() => {
@@ -456,7 +459,7 @@ const Chat = () => {
         ${
           isUploading
             ? "bg-gray-500 cursor-not-allowed"
-            : "bg-blue-600 hover:bg-blue-700"
+            : "bg-[#262344] hover:bg-blue-700"
         }`}
               aria-label="Send Message"
             >

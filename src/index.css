@@ -1,21 +1,33 @@
 @import "tailwindcss";
-body {
+
+.font-orbitron{
+  font-family: 'Orbitron', sans-serif;
+}
+
+.font-inter{
+  font-family: 'Inter', sans-serif;
+}
+.font-michroma{
   font-family: 'Michroma', sans-serif;
 }
+
+.font-jersey {
+  font-family: "Jersey 20", sans-serif;
+}
+
 .highlight{
-  background-color: rgba(85, 68, 255);
+  background-color: #000000;
 }
 
 .normal{
-  background-color: transparent;
-  border: 1px solid rgba(85, 68, 255);
+  background-color:#AFAEAC;
 }
 
 .text-highlight {
-  color: rgba(85, 68, 255);
+  color: #000000;
 }
 .text-normal {
-  color: rgba(85, 68, 255, 0.5);
+  color: #AFAEAC;
 }
 
 .border-highlight {
@@ -35,56 +47,31 @@ body {
   animation: fadeUpBackground 0.1s forwards;
 }
 
-
-
-
-.skill-card-ltr {
-  position: relative;
-  overflow: hidden;
-  z-index: 0; 
-}
-
-.skill-card-ltr::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent);
-  transform: translateX(-100%);
-  transition: transform 0.4s ease;
-  z-index: -1; /* put it behind content */
-}
-
-.skill-card-ltr:hover::before {
-  transform: translateX(0);
-}
-
-
 .color-empty {
-  fill: #1f2937 !important; 
+  fill: #454545 !important;
   rx: 2;
   ry: 2;
 }
-
 .color-scale-1 {
-  fill: #064e3b; 
+  fill: #E9B0FF !important;
   rx: 2;
   ry: 2;
 }
 
 .color-scale-2 {
-  fill: #047857; 
+  fill: #C99AFF !important;
   rx: 2;
   ry: 2;
 }
 
 .color-scale-3 {
-  fill: #10b981; 
+  fill: #A586FF !important;
   rx: 2;
   ry: 2;
 }
 
 .color-scale-4 {
-  fill: #6ee7b7; 
+  fill: #4D84FA !important;
   rx: 2;
   ry: 2;
 }
@@ -96,12 +83,6 @@ body {
   shape-rendering: geometricPrecision;
 }
 
-.react-calendar-heatmap text {
-  display: none;
-}
-.react-calendar-heatmap .text {
-  display: none;
-}
 
 .react-calendar-heatmap-all-weeks{
   width: 100% !important;
@@ -135,5 +116,10 @@ body {
 
 .random-heatmap-leetcode-appear {
   opacity: 0;
-  animation: fadePop 0.5s ease-out forwards;
+  animation: fadePop 0.5s forwards ease-out;
+}
+
+@keyframes heat-appear {
+  from { opacity: 0; transform: scale(0.4); }
+  to   { opacity: 1; transform: scale(1); }
 }

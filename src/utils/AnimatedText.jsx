@@ -7,7 +7,8 @@ function AnimatedTextLine({
   typingSpeed = 10,
   className = "",
 }) {
-  const isLoading = useSelector((state) => state.loading.isLoading);
+  // const isLoading = useSelector((state) => state.loading.isLoading);
+  const isLoading = false;
   const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {

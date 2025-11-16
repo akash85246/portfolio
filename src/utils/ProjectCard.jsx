@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CircleChevronLeft, CircleChevronRight } from "lucide-react";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
@@ -7,7 +7,6 @@ function ProjectCard({
   title,
   images,
   description,
-  github,
   link,
   index,
   tags,
@@ -30,7 +29,7 @@ function ProjectCard({
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-    }, 5000);
+    }, 1000);
     return () => clearInterval(interval);
   }, [images.length]);
 
@@ -64,91 +63,89 @@ function ProjectCard({
       variants={cardVariants}
       initial="hidden"
       animate={controls}
-      className={`project-card flex flex-col lg:flex-row ${
-        isEven ? "" : "lg:flex-row-reverse"
-      } rounded-lg  gap-5`}
+      className="relative  group  w-full"
     >
-      {/* Carousel */}
-      <div className="relative sm:h-[30rem] lg:w-2/3 w-full overflow-hidden rounded-md">
-        <img
-          src={images[currentIndex]}
-          alt={`${title} image ${currentIndex + 1}`}
-          className="w-full h-full object-cover transition duration-500"
-        />
-
-        {/* Dots */}
-        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
-          {images.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`h-2 w-2 md:w-3 md:h-3 lg:h-4 lg:w-4 rounded-full ${
-                index === currentIndex ? "highlight" : "normal"
-              }`}
-              aria-label={`Slide ${index + 1}`}
-            />
-          ))}
-        </div>
-
-        {/* Navigation Buttons */}
-        <button
-          onClick={prevSlide}
-          className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-opacity-50 text-white px-2 py-1 rounded-full"
-        aria-label="Previous Slide"
+      <h3 className="w-full flex justify-between items-center font-inter p-11 border-b border-[#7B7B7B]">
+        <a
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className=" font-medium  text-xl  leading-none tracking-[0] uppercase"
         >
-          <ChevronLeft className="text-highlight" />
-        </button>
-        <button
-          onClick={nextSlide}
-          className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-opacity-50 text-white px-2 py-1 rounded-full"
-        aria-label="Next Slide"
-        >
-          <ChevronRight className="text-highlight" />
-        </button>
-      </div>
-
-      {/* Content */}
-      <div className="lg:w-1/3 w-full">
-        <h2 className="project-title text-lg sm:text-xl font-semibold mb-4 lg:mb-2 orbitron">
           {title}
-        </h2>
-        <p className="project-description text-gray-300 mb-4 lg:mb-2 text-xs sm:text-sm md:text-base">
-          {description}
-        </p>
-        <ul className="project-tags flex flex-wrap gap-2 mb-4 lg:mb-2">
-          {tags.map((tag, index) => (
-            <li
-              key={index}
-              className="skill-card-ltr p-2 px-4 rounded-xl backdrop-blur-md backdrop-opacity-70 border border-white/20 
-              text-[0.8rem] md:text-xs 2xl:text-sm text-white flex items-center justify-center 
-              transition-all duration-300 ease-in-out hover:scale-110 hover:-translate-y-1 
-              hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] "
+        </a>
+        <span className=" font-normal text-lg leading-[19px] tracking-[0] text-justify">
+          {" "}
+          {description.slice(0, 100)}...
+        </span>
+      </h3>
+
+      <div
+        className={`hidden group-hover:flex  absolute p-[0.1rem] rounded-md bg-gradient-to-br from-[#E9B0FF] via-[#C08CFF] to-[#4D84FA] z-50  pointer-events-none`}
+      >
+        <div
+          className={` project-card flex flex-col lg:flex-row  bg-[#222222]  p-4 ${
+            isEven ? "" : "lg:flex-row-reverse"
+          } rounded-lg  gap-5`}
+        >
+          {/* Carousel */}
+          <div className="relative h-[25rem] lg:w-2/3 overflow-hidden rounded-md">
+            <img
+              src={images[currentIndex]}
+              alt={`${title} image ${currentIndex + 1}`}
+              className="w-full h-full object-cover transition duration-500"
+            />
+
+            {/* Dots */}
+            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`h-2 w-2 rounded-full ${
+                    index === currentIndex ? "highlight" : "normal"
+                  }`}
+                  aria-label={`Slide ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            {/* Navigation Buttons */}
+            <button
+              onClick={prevSlide}
+              className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-opacity-50 text-white px-2 py-1 rounded-full"
+              aria-label="Previous Slide"
             >
-              {tag}
-            </li>
-          ))}
-        </ul>
-        <div className="project-links flex gap-4">
-          {github && (
-            <a
-              href={github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline text-sm md:text-base"
+              <CircleChevronLeft className="text-highlight" />
+            </button>
+            <button
+              onClick={nextSlide}
+              className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-opacity-50 text-white px-2 py-1 rounded-full"
+              aria-label="Next Slide"
             >
-              GitHub
-            </a>
-          )}
-          {link && link !== "#" && (
-            <a
-              href={link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-green-600 hover:underline text-sm md:text-base"
-            >
-              Live Demo
-            </a>
-          )}
+              <CircleChevronRight className="text-highlight" />
+            </button>
+          </div>
+
+          {/* Content */}
+          <div className="w-1/2 font-inter font-medium  flex flex-col justify-between gap-5  p-5  ">
+            <h2 className="text-2xl leading-none tracking-[0] uppercase">
+              {title}
+            </h2>
+            <p className="font-normal text-xl leading-relaxed  tracking-[0] text-justify  text-xs sm:text-sm md:text-base">
+              {description}
+            </p>
+            <ul className="project-tags flex flex-wrap gap-2 mb-4 lg:mb-2">
+              {tags.map((tag, index) => (
+                <li
+                  key={index}
+                  className="opacity-100 border border-[#EFEFEF]rounded-md px-2 py-1 gap-[10px] font-inter font-normal text-base leading-none tracking-[0]"
+                >
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </motion.li>

@@ -1,5 +1,5 @@
 import ProjectCard from "../utils/ProjectCard";
-import { ExternalLink } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 import skill1 from "../assets/ProjectImages/Project1/page1.png";
 import shelf1 from "../assets/ProjectImages/Project2/page1.png";
@@ -21,8 +21,7 @@ import engineer6 from "../assets/ProjectImages/Project3/page6.png";
 import engineer7 from "../assets/ProjectImages/Project3/page7.png";
 import engineer8 from "../assets/ProjectImages/Project3/page8.png";
 import { motion, useInView } from "framer-motion";
-import AnimatedTextLine from "../utils/AnimatedText";
-import {  useRef } from "react";
+import { useRef } from "react";
 
 function Project() {
   const aboutRef = useRef(null);
@@ -131,18 +130,18 @@ function Project() {
   ];
 
   return (
-    <section className="next-section  project section" id="project">
+    <section className="section" id="project">
       <motion.div
         ref={aboutRef}
         initial={{ opacity: 0, y: 50 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-        className="flex flex-col justify-around  min-h-[60vh]"
+        className="flex flex-col justify-around "
       >
         <div>
-          <h1 className="section-heading text-left">PROJECT</h1>
+          <h1 className="section-heading">PROJECTS</h1>
         </div>
-        <ul id="project-list" className="flex flex-col gap-10">
+        <ul id="project-list" className="flex flex-col">
           {projects.map((project, index) => (
             <ProjectCard
               key={index}
@@ -157,15 +156,26 @@ function Project() {
           ))}
         </ul>
 
-        <div className="flex justify-center mt-5 md:mt-10 px-4">
+        <div className="flex justify-center mt-5 px-4">
           <a
             href="https://github.com/akash85246?tab=repositories"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:text-[#8b5cf6] hover:scale-105 transition-all duration-300 ease-in-out border border-white/10 backdrop-blur-sm text-xs sm:text-sm md:text-base lg:text-base"
+            className="
+      inline-flex items-center gap-2 
+      px-5 py-2 
+      font-medium 
+      text-lg
+      transition-all duration-300
+      hover:scale-105 uppercase
+      bg-gradient-to-r from-[#E9B0FF] to-[#4D84FA] bg-clip-text text-transparent
+    "
           >
             More Projects on GitHub
-            <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 " />
+            <ArrowUpRight
+              className=" text-white
+      "
+            />
           </a>
         </div>
       </motion.div>

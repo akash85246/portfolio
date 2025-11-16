@@ -19,9 +19,9 @@ export const fetchStories = createAsyncThunk(
       const prioritized = [...unseenStories, ...seenStoriesArr].slice(0, 10);
 
       //repeat stories to create a longer carousel effect
-    //   const copies = 10;
-    //   const repeated = Array(copies).fill(prioritized).flat();
-    //   return repeated;
+      //   const copies = 10;
+      //   const repeated = Array(copies).fill(prioritized).flat();
+      //   return repeated;
 
       return prioritized;
     } catch (err) {
