@@ -24,7 +24,7 @@ import seaborn from "../assets/SkillImages/seaborn.svg";
 import scikit from "../assets/SkillImages/scikit-learn.svg";
 import tensorflow from "../assets/SkillImages/tensorflow.svg";
 import vitejs from "../assets/SkillImages/Vite.js.svg";
-import react from "../assets/SkillImages/React.svg";
+import react from "../assets/SkillImages/react.svg";
 import machineLearning from "../assets/SkillImages/machine-learning.svg";
 import googleAIStudio from "../assets/SkillImages/googleAIStudio.svg";
 
